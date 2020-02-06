@@ -4,9 +4,10 @@ import {
   Then,
   When
 } from 'cucumber'
+import expect from 'expect'
 
 Given(/^the following available products:$/, function (table: TableDefinition) {
-
+    expect(this.example).toBe(true)
 })
 Given(/^the empty shopping cart$/, function () {
 
