@@ -1,0 +1,38 @@
+{
+  "include": [
+    "src/**/*",
+    "acceptance/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ],
+  "compilerOptions": {
+    "lib": [
+      "es6",
+      "dom"
+    ],
+    // No need for "es5" if you have "es6"
+    "types": [
+      "node",
+      "jest",
+      "cucumber"
+    ],
+    // When you code for nodejs
+    "target": "es6",
+    // NodeJs v8.9.3 supports most of the es6 features
+    "pretty": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    // Don't emit; allow Babel to transform files.
+    "noEmit": true,
+    "strict": true
+  },
+  "compileOnSave": true
+}
