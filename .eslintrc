@@ -10,37 +10,5 @@
     "node": true,
     "jest": true
   },
-  "rules": {
-    "@typescript-eslint/indent": [
-      "warn",
-      2
-    ],
-    "@typescript-eslint/explicit-function-return-type": [
-      "warn",
-      {
-        "allowExpressions": true
-      }
-    ],
-    "no-unexpected-multiline": "warn",
-    "@typescript-eslint/explicit-member-accessibility": 0,
-    "quotes": ["error", "single"],
-    "semi": [
-      "warn",
-      "never"
-    ],
-    "no-extra-semi": "warn",
-    "@typescript-eslint/member-delimiter-style": [
-      "warn",
-      {
-        "multiline": {
-          "delimiter": "none",
-          "requireLast": false
-        },
-        "singleline": {
-          "delimiter": "semi",
-          "requireLast": false
-        }
-      }
-    ]
-  }
+  "rules": {}
 }
