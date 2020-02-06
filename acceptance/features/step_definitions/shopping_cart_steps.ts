@@ -21,16 +21,16 @@ Given(/^the following available products:$/, function (table: TableDefinition) {
     this.product = getProductsFromTable(table)
 })
 Given(/^the empty shopping cart$/, function () {
-    this.shoppingCart = new ShoppingCart([])
+    this.shoppingCart = ShoppingCart.createEmpty()
 })
 Given(/^the shopping cart contains the following items:$/, function (table: TableDefinition) {
-    this.shoppingCart = new ShoppingCart(getProductsFromTable(table))
+    this.shoppingCart = ShoppingCart.createWithProducts(getProductsFromTable(table))
 })
 When(/^I add the following item:$/, function (table: TableDefinition) {
 
 })
 When(/^I remove the following item:$/, function (table: TableDefinition) {
-    this.shoppingCart.remove(getProductsFromTable(table))
+    this.shoppingCart.removeProduct(getProductsFromTable(table)[0])
 })
 When(/^I proceed to check out$/, function () {
 

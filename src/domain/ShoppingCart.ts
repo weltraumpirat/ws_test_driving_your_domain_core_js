@@ -8,6 +8,10 @@ export class ShoppingCart {
         return new ShoppingCart([])
     }
 
+    public static createWithProducts(products: Product[]) {
+        return new ShoppingCart([...products])
+    }
+
     get products() {
         return this._products.slice();
     }
