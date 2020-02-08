@@ -7,7 +7,6 @@ import {
 export class CheckoutService {
   public checkOut(items: ShoppingCartItem[]): Order {
     const sum: Map<string, [number, string]> = items.reduce((m: Map<string, [number, string]>, item): Map<string, [number, string]> => {
-      console.log(m, item.name, m.has(item.name))
       const positionName = `${item.name}, ${item.amount} ${item.packagingType}`
       if (m.has(positionName))
         {
