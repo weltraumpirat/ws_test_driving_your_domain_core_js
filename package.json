@@ -19,7 +19,7 @@
     "precommit": "yarn check-types && yarn lint && yarn test:coverage && yarn test:acceptance",
     "start": "nodemon --exec yarn babel-node -- src/index.ts --source-maps",
     "test:watch": "jest --watch",
-    "test:acceptance": "yarn test:cucumber & yarn test:report",
+    "test:acceptance": "yarn test:cucumber && yarn test:report",
     "test:cucumber": "yarn build:src && yarn build:cucumber && ./node_modules/.bin/cucumber-js acceptance/**/*.feature --logLevel=error --require-module ts-node/register --format-options \"{\\\"snippetInterface\\\": \\\"async-await\\\"}\" --format \"json:acceptance/reports/cucumber-report.json\" --format summary",
     "test:report": "node acceptance/reporters/cucumber-html-reporter.js",
     "test": "yarn test:unit && yarn test:acceptance",
@@ -37,6 +37,7 @@
     "@types/cucumber": "^4.0.5",
     "@types/jest": "^24.0.11",
     "@types/node": "^11.13.0",
+    "@types/uuid": "^3.4.7",
     "@typescript-eslint/eslint-plugin": "^1.6.0",
     "@typescript-eslint/parser": "^1.6.0",
     "cucumber": "^5.1.0",
@@ -50,5 +51,6 @@
     "typescript": "^3.4.1"
   },
   "dependencies": {
+    "uuid": "^3.4.0"
   }
 }

@@ -1,26 +1,57 @@
-import {Product} from "./Product"
+// @ts-ignore
+import uuid from "uuid/v4"
+
+export class ShoppingCartItem {
+    private constructor(
+      public readonly id: string,
+      public readonly name: string,
+      public readonly packagingType: string,
+      public readonly amount: string,
+      public readonly price: string) {
+    }
+
+    public static create(
+      name: string,
+      packagingType: string,
+      amount: string,
+      price: string) {
+       return new ShoppingCartItem(uuid(), name, packagingType, amount, price)
+    }
+    public static restore(
+      id: string,
+      name: string,
+      packagingType: string,
+      amount: string,
+      price: string) {
+        return new ShoppingCartItem(id, name, packagingType, amount, price)
+    }
+}
 
 export class ShoppingCart {
-    private constructor(private _products: Product[]) {
+    private constructor(private _items: ShoppingCartItem[]) {
     }
 
     public static createEmpty() {
         return new ShoppingCart([])
     }
 
-    public static createWithProducts(products: Product[]) {
-        return new ShoppingCart([...products])
+    public static createWithItems(...items: ShoppingCartItem[]) {
+        return new ShoppingCart([...items])
     }
 
-    get products() {
-        return this._products.slice();
+    public addItem( item: ShoppingCartItem) {
+        this._items.push(item)
     }
 
-    addProducts(products: Product[]) {
-        this._products.push(...products)
+    removeItem(item: ShoppingCartItem) {
+        this._items = this._items.filter(i => i.id !== item.id)
     }
 
-    removeProduct(product: Product) {
-        this._products = this._products.filter(value => JSON.stringify(value) !== JSON.stringify(product));
+    get items() {
+        return this._items.slice();
+    }
+
+    get empty() {
+        return this._items.length === 0
     }
 }
