@@ -4,16 +4,16 @@ import {
   OrderPosition
 } from './Order'
 
-const addItemEntry = (m: Map<string, {count:number, price:string}>, item) => {
+const addItemEntry = (m: Map<string, {count:number, price:string}>, item: ShoppingCartItem) => {
   m.set(item.label, {count: 1, price:item.price})
   return m
 }
-const increaseItemCount = (m: Map<string, {count:number, price:string}>, item) => {
+const increaseItemCount = (m: Map<string, {count:number, price:string}>, item: ShoppingCartItem) => {
   const value = m.get(item.label)
   if (value && value.count) value.count++
   return m
 }
-const countItem = (m: Map<string, {count:number, price:string}>, item): Map<string, {count:number, price:string}> => {
+const countItem = (m: Map<string, {count:number, price:string}>, item: ShoppingCartItem): Map<string, {count:number, price:string}> => {
   return m.has(item.label) ? increaseItemCount(m, item) : addItemEntry(m, item)
 }
 const countItems = (items: ShoppingCartItem[]) => items.reduce(countItem, new Map())
