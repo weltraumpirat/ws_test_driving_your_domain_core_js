@@ -4,22 +4,28 @@ import {
   OrderPosition
 } from './Order'
 
+const addItemEntry = (m: Map<string, {count:number, price:string}>, item) => {
+  m.set(item.label, {count: 1, price:item.price})
+  return m
+}
+const increaseItemCount = (m: Map<string, {count:number, price:string}>, item) => {
+  const value = m.get(item.label)
+  if (value && value.count) value.count++
+  return m
+}
+const countItem = (m: Map<string, {count:number, price:string}>, item): Map<string, {count:number, price:string}> => {
+  return m.has(item.label) ? increaseItemCount(m, item) : addItemEntry(m, item)
+}
+const countItems = (items: ShoppingCartItem[]) => items.reduce(countItem, new Map())
+
+
 export class CheckoutService {
   public checkOut(items: ShoppingCartItem[]): Order {
-    const sum: Map<string, [number, string]> = items.reduce((m: Map<string, [number, string]>, item): Map<string, [number, string]> => {
-      const positionName = `${item.name}, ${item.amount} ${item.packagingType}`
-      if (m.has(positionName))
-        {
-          const value = m.get(positionName)
-          if(value && value[0]) value[0]++
-        }
-      else m.set(positionName, [1, item.price])
-      return m
-    }, new Map())
+    const itemCounts = countItems(items)
     const positions: OrderPosition[] = []
-    sum.forEach((value, key) => {
-      const combined = value[0] * parseFloat(value[1])
-      positions.push(OrderPosition.create(key, value[0], value[1], combined + ' EUR'))
+    itemCounts.forEach((value, key) => {
+      const combined = value.count * parseFloat(value.price)
+      positions.push(OrderPosition.create(key, value.count, value.price, combined + ' EUR'))
     })
     return Order.create(...positions)
   }

@@ -10,6 +10,10 @@ export class ShoppingCartItem {
       public readonly price: string) {
     }
 
+    public get label():string {
+        return `${this.name}, ${this.amount} ${this.packagingType}`
+    }
+
     public static create(
       name: string,
       packagingType: string,
