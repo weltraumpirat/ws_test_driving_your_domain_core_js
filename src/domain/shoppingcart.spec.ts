@@ -1,7 +1,7 @@
 import {
   ShoppingCart,
   ShoppingCartItem
-} from './ShoppingCart'
+} from './shoppingcart'
 
 describe('Shopping Cart:', () => {
   let item: ShoppingCartItem

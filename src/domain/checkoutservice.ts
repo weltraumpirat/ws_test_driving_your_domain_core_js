@@ -1,8 +1,8 @@
-import {ShoppingCartItem} from './ShoppingCart'
+import {ShoppingCartItem} from './shoppingcart'
 import {
   Order,
   OrderPosition
-} from './Order'
+} from './order'
 
 const addItemEntry = (m: Map<string, {count:number, price:string}>, item: ShoppingCartItem) => {
   m.set(item.label, {count: 1, price:item.price})

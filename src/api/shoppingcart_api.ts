@@ -1,9 +1,9 @@
 import {
   ShoppingCart,
   ShoppingCartItem
-} from '../domain/ShoppingCart'
-import {CheckoutService} from '../domain/CheckoutService'
-import {Order} from '../domain/Order'
+} from '../domain/shoppingcart'
+import {CheckoutService} from '../domain/checkoutservice'
+import {Order} from '../domain/order'
 
 export class ShoppingCartApi {
   private _shoppingCart: ShoppingCart
