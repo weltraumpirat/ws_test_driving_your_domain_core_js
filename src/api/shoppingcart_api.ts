@@ -4,12 +4,16 @@ import {
 } from '../domain/shoppingcart'
 import {CheckoutService} from '../domain/checkoutservice'
 import {Order} from '../domain/order'
+import {ProductCatalogApi} from './productcatalog_api'
+import {validateShoppingCartItem} from '../validation'
 
 export class ShoppingCartApi {
   private _shoppingCart: ShoppingCart
   private _checkoutService: CheckoutService
+  private _productCatalogApi: ProductCatalogApi
 
-  public constructor() {
+  public constructor(productCatalogApi: ProductCatalogApi) {
+    this._productCatalogApi = productCatalogApi
     this._shoppingCart = ShoppingCart.createEmpty()
     this._checkoutService = new CheckoutService()
   }
@@ -23,6 +27,7 @@ export class ShoppingCartApi {
   }
 
   public addItemToShoppingCart(item: ShoppingCartItem): void {
+    validateShoppingCartItem(item, this._productCatalogApi.getProducts())
     this._shoppingCart.addItem(item)
   }
 

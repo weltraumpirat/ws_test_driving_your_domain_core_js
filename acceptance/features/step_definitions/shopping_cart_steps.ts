@@ -11,10 +11,10 @@ import {
   tableRowsToItems,
   tableRowsToOrderPositions,
   tableRowsToProducts
-} from '../helpers/table_conversion.ts/table_conversion'
+} from '../helpers/table_conversion'
 
 Given(/^the following available products:$/, function (table: TableDefinition) {
-  this.products = tableRowsToProducts(table)
+  this.productCatalogApi.createCatalogWithProducts(tableRowsToProducts(table))
 })
 Given(/^the empty shopping cart$/, function () {
   this.shoppingCartApi.createEmptyShoppingCart()
