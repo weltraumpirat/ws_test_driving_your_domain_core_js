@@ -4,20 +4,25 @@ import {
   OrderPosition
 } from './order'
 
-const addItemEntry = (m: Map<string, {count:number, price:string}>, item: ShoppingCartItem) => {
-  m.set(item.label, {count: 1, price:item.price})
+
+type ItemEntry = Map<string, { count: number, price: string }>
+
+const addItemEntry = (m: ItemEntry, item: ShoppingCartItem): ItemEntry => {
+  m.set(item.label, {count: 1, price: item.price})
   return m
 }
-const increaseItemCount = (m: Map<string, {count:number, price:string}>, item: ShoppingCartItem) => {
+
+const increaseItemCount = (m: ItemEntry, item: ShoppingCartItem): ItemEntry => {
   const value = m.get(item.label)
   if (value && value.count) value.count++
   return m
 }
-const countItem = (m: Map<string, {count:number, price:string}>, item: ShoppingCartItem): Map<string, {count:number, price:string}> => {
+
+const countItem = (m: ItemEntry, item: ShoppingCartItem): ItemEntry => {
   return m.has(item.label) ? increaseItemCount(m, item) : addItemEntry(m, item)
 }
-const countItems = (items: ShoppingCartItem[]) => items.reduce(countItem, new Map())
 
+const countItems = (items: ShoppingCartItem[]): ItemEntry => items.reduce(countItem, new Map())
 
 export class CheckoutService {
   public checkOut(items: ShoppingCartItem[]): Order {

@@ -1,61 +1,76 @@
 // @ts-ignore
-import uuid from "uuid/v4"
+import uuid from 'uuid/v4'
 
 export class ShoppingCartItem {
-    private constructor(
-      public readonly id: string,
-      public readonly name: string,
-      public readonly packagingType: string,
-      public readonly amount: string,
-      public readonly price: string) {
-    }
+  public readonly id: string
+  public readonly name: string
+  public readonly packagingType: string
+  public readonly amount: string
+  public readonly price: string
 
-    public get label():string {
-        return `${this.name}, ${this.amount} ${this.packagingType}`
-    }
+  private constructor(
+    id: string,
+    name: string,
+    packagingType: string,
+    amount: string,
+    price: string) {
+    this.price = price
+    this.amount = amount
+    this.packagingType = packagingType
+    this.name = name
+    this.id = id
+  }
 
-    public static create(
-      name: string,
-      packagingType: string,
-      amount: string,
-      price: string) {
-       return new ShoppingCartItem(uuid(), name, packagingType, amount, price)
-    }
-    public static restore(
-      id: string,
-      name: string,
-      packagingType: string,
-      amount: string,
-      price: string) {
-        return new ShoppingCartItem(id, name, packagingType, amount, price)
-    }
+  public get label(): string {
+    return `${this.name}, ${this.amount} ${this.packagingType}`
+  }
+
+  public static create(
+    name: string,
+    packagingType: string,
+    amount: string,
+    price: string): ShoppingCartItem {
+    return new ShoppingCartItem(uuid(), name, packagingType, amount, price)
+  }
+
+  public static restore(
+    id: string,
+    name: string,
+    packagingType: string,
+    amount: string,
+    price: string): ShoppingCartItem {
+    return new ShoppingCartItem(id, name, packagingType, amount, price)
+  }
 }
 
 export class ShoppingCart {
-    private constructor(private _items: ShoppingCartItem[]) {
-    }
+  private _items: ShoppingCartItem[]
 
-    public static createEmpty() {
-        return new ShoppingCart([])
-    }
+  private constructor(_items: ShoppingCartItem[]) {
+    this._items = _items
+  }
 
-    public static createWithItems(...items: ShoppingCartItem[]) {
-        return new ShoppingCart([...items])
-    }
+  public static createEmpty(): ShoppingCart {
+    return new ShoppingCart([])
+  }
 
-    public addItem( item: ShoppingCartItem) {
-        this._items.push(item)
-    }
+  public static createWithItems(...items: ShoppingCartItem[]): ShoppingCart {
+    return new ShoppingCart([...items])
+  }
 
-    removeItem(item: ShoppingCartItem) {
-        this._items = this._items.filter(i => i.id !== item.id)
-    }
+  public addItem(item: ShoppingCartItem): void {
+    this._items.push(item)
+  }
 
-    get items() {
-        return this._items.slice();
-    }
+  public removeItem(item: ShoppingCartItem): void {
+    this._items = this._items.filter((i: ShoppingCartItem): boolean => i.id !== item.id)
+  }
 
-    get empty() {
-        return this._items.length === 0
-    }
+  public get items(): ShoppingCartItem[] {
+    return this._items.slice()
+  }
+
+  public get empty(): boolean {
+    return this._items.length === 0
+  }
 }

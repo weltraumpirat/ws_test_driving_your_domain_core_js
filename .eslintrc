@@ -10,5 +10,27 @@
     "node": true,
     "jest": true
   },
-  "rules": {}
+  "rules": {
+    "@typescript-eslint/indent": ["warn", 2],
+    "@typescript-eslint/semi": ["warn", "never"],
+    "@typescript-eslint/explicit-function-return-type": [
+      "warn", {
+        "allowExpressions": true,
+        "allowTypedFunctionExpressions": true,
+        "allowHigherOrderFunctions": true
+      }
+    ],
+    "@typescript-eslint/member-delimiter-style": [
+      "warn", {
+        "multiline": {
+          "delimiter": "none",
+          "requireLast": false
+        },
+        "singleline": {
+          "delimiter": "comma",
+          "requireLast": false
+        }
+      }
+    ]
+  }
 }

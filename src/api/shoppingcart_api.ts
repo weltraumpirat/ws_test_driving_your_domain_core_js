@@ -9,24 +9,24 @@ export class ShoppingCartApi {
   private _shoppingCart: ShoppingCart
   private _checkoutService: CheckoutService
 
-  constructor() {
+  public constructor() {
     this._shoppingCart = ShoppingCart.createEmpty()
     this._checkoutService = new CheckoutService()
   }
 
-  public createEmptyShoppingCart() {
+  public createEmptyShoppingCart(): void {
     this._shoppingCart = ShoppingCart.createEmpty()
   }
 
-  public createShoppingCartWithItems(...items: ShoppingCartItem[]) {
+  public createShoppingCartWithItems(...items: ShoppingCartItem[]): void {
     this._shoppingCart = ShoppingCart.createWithItems(...items)
   }
 
-  public addItemToShoppingCart(item: ShoppingCartItem) {
+  public addItemToShoppingCart(item: ShoppingCartItem): void {
     this._shoppingCart.addItem(item)
   }
 
-  public removeItemFromShoppingCart(item: ShoppingCartItem) {
+  public removeItemFromShoppingCart(item: ShoppingCartItem): void {
     this._shoppingCart.removeItem(item)
   }
 

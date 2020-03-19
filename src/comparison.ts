@@ -9,16 +9,16 @@ export function equalPositionIgnoringIds(one: OrderPosition, two: OrderPosition)
     && one.singlePrice === two.singlePrice
 }
 
-export function equalOrderIgnoringIds(one: Order, two: Order): boolean {
-  return one.total === two.total
-    && equalPositions(one.positions, two.positions)
-}
-
-export function equalPositions(one: OrderPosition[], two: OrderPosition[]) {
+export function equalPositions(one: OrderPosition[], two: OrderPosition[]): boolean {
   for (let i = 0; i < one.length; i++) {
     if (!equalPositionIgnoringIds(one[i], two[i])) {
       return false
     }
   }
   return true
+}
+
+export function equalOrderIgnoringIds(one: Order, two: Order): boolean {
+  return one.total === two.total
+    && equalPositions(one.positions, two.positions)
 }

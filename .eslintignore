@@ -3,4 +3,4 @@ src/**/*.map
 acceptance/**/*.js
 acceptance/**/*.map
 
-**/*.ts
+node_modules

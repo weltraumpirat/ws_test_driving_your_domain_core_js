@@ -9,8 +9,7 @@ describe('Shopping Cart:', () => {
 
   beforeEach(() => {
     cart = ShoppingCart.createEmpty()
-    item = ShoppingCartItem.create( 'Whole Milk','Carton',  '1l',  '1.19 EUR')
-
+    item = ShoppingCartItem.create('Whole Milk', 'Carton', '1l', '1.19 EUR')
   })
 
   it('should be empty', () => {
