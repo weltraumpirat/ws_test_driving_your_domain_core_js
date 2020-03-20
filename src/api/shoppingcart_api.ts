@@ -6,6 +6,16 @@ import {CheckoutService} from '../domain/checkoutservice'
 import {Order} from '../domain/order'
 import {ProductCatalogApi} from './productcatalog_api'
 import {validateShoppingCartItem} from '../validation'
+import {toData} from '../conversion'
+
+export interface ShoppingCartItemData {
+  id: string
+  name: string
+  label?: string
+  packagingType: string
+  amount: string
+  price: string
+}
 
 export class ShoppingCartApi {
   private _shoppingCart: ShoppingCart
@@ -22,21 +32,22 @@ export class ShoppingCartApi {
     this._shoppingCart = ShoppingCart.createEmpty()
   }
 
-  public createShoppingCartWithItems(...items: ShoppingCartItem[]): void {
-    this._shoppingCart = ShoppingCart.createWithItems(...items)
+  public createShoppingCartWithItems(...items: ShoppingCartItemData[]): void {
+    this._shoppingCart = ShoppingCart.createWithItems(...(items.map(ShoppingCartItem.fromData)))
   }
 
-  public addItemToShoppingCart(item: ShoppingCartItem): void {
+  public addItemToShoppingCart(data: ShoppingCartItemData): void {
+    const item = ShoppingCartItem.fromData(data)
     validateShoppingCartItem(item, this._productCatalogApi.getProducts())
     this._shoppingCart.addItem(item)
   }
 
-  public removeItemFromShoppingCart(item: ShoppingCartItem): void {
-    this._shoppingCart.removeItem(item)
+  public removeItemFromShoppingCart(item: ShoppingCartItemData): void {
+    this._shoppingCart.removeItem(ShoppingCartItem.fromData(item))
   }
 
   public checkOut(): Order {
-    return this._checkoutService.checkOut(this._shoppingCart.items)
+    return this._checkoutService.checkOut(this._shoppingCart.items.map(toData) as ShoppingCartItemData[])
   }
 
   public isShoppingCartEmpty(): boolean {
@@ -47,7 +58,7 @@ export class ShoppingCartApi {
     return this._shoppingCart.items.length
   }
 
-  public getShoppingCartItems(): ShoppingCartItem[] {
-    return this._shoppingCart.items
+  public getShoppingCartItems(): ShoppingCartItemData[] {
+    return this._shoppingCart.items.map(toData) as ShoppingCartItemData[]
   }
 }

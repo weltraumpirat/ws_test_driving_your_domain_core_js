@@ -2,6 +2,7 @@ import {
   ShoppingCart,
   ShoppingCartItem
 } from './shoppingcart'
+import {PackagingType} from './product'
 
 describe('Shopping Cart:', () => {
   let item: ShoppingCartItem
@@ -32,5 +33,15 @@ describe('Shopping Cart:', () => {
       cart.removeItem(item)
       expect(cart.empty).toBe(true)
     })
+  })
+
+  it('should convert from serialized data', () => {
+    expect(ShoppingCartItem.fromData({
+      id: '1',
+      name: 'Whole Milk',
+      packagingType: PackagingType.CARTON,
+      amount: '1L',
+      price: '1.19 EUR'
+    }).label).toEqual('Whole Milk, 1L Carton')
   })
 })

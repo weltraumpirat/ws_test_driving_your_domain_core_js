@@ -1,9 +1,11 @@
 // @ts-ignore
 import uuid from 'uuid/v4'
+import {ShoppingCartItemData} from '../api/shoppingcart_api'
 
 export class ShoppingCartItem {
   public readonly id: string
   public readonly name: string
+  public readonly label: string
   public readonly packagingType: string
   public readonly amount: string
   public readonly price: string
@@ -19,10 +21,7 @@ export class ShoppingCartItem {
     this.packagingType = packagingType
     this.name = name
     this.id = id
-  }
-
-  public get label(): string {
-    return `${this.name}, ${this.amount} ${this.packagingType}`
+    this.label =  `${this.name}, ${this.amount} ${this.packagingType}`
   }
 
   public static create(
@@ -40,6 +39,10 @@ export class ShoppingCartItem {
     amount: string,
     price: string): ShoppingCartItem {
     return new ShoppingCartItem(id, name, packagingType, amount, price)
+  }
+
+  public static fromData( data: ShoppingCartItemData): ShoppingCartItem {
+    return ShoppingCartItem.restore(data.id, data.name, data.packagingType, data.amount, data.price)
   }
 }
 
