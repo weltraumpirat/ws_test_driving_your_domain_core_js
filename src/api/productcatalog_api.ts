@@ -4,8 +4,10 @@ import {
 } from '../domain/product'
 import {ProductCatalog} from '../domain/productcatalog'
 import {toData} from '../conversion'
+import {ProductRepositoryInMemory} from '../persistence/product_repository'
 
 export interface ProductData {
+  id?: string
   name: string
   packagingType: PackagingType
   amount: string
@@ -16,7 +18,7 @@ export class ProductCatalogApi {
   private _catalog?: ProductCatalog
 
   public createCatalogWithProducts(products: ProductData[]): void {
-    this._catalog = ProductCatalog.createWithProducts(products.map(Product.fromData))
+    this._catalog = ProductCatalog.create(new ProductRepositoryInMemory(products.map(Product.fromData)))
   }
 
   public getProducts(): ProductData[] {

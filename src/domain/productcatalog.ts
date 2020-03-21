@@ -1,21 +1,23 @@
 import {Product} from './product'
 
-export class ProductCatalog {
-  private _products: Product[]
+export interface ProductRepository {
+  findAll(): Product[]
 
-  public constructor(products?: Product[]) {
-    this._products = products || []
+  create(product: Product): string
+}
+
+export class ProductCatalog {
+  private _repository: ProductRepository
+
+  public constructor(repository: ProductRepository) {
+    this._repository = repository
   }
 
   public get products(): Product[] {
-    return this._products
+    return this._repository.findAll()
   }
 
-  public static createWithProducts(products: Product[]): ProductCatalog {
-    return new ProductCatalog(products)
-  }
-
-  public static createEmpty(): ProductCatalog {
-    return new ProductCatalog()
+  public static create(repository: ProductRepository): ProductCatalog {
+    return new ProductCatalog(repository)
   }
 }

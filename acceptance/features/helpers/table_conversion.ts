@@ -6,7 +6,7 @@ import {
 import {TableDefinition} from 'cucumber'
 import {ShoppingCartItem} from '../../../src/domain/shoppingcart'
 
-export const rowToProduct = (columns: string[]): Product => new Product(columns[0], columns[1] as PackagingType, columns[2], columns[3])
+export const rowToProduct = (columns: string[]): Product => new Product(columns[0], columns[1], columns[2] as PackagingType, columns[3], columns[4])
 
 export const tableRowsToProducts = (table: TableDefinition): Product[] => table.rows().map(rowToProduct)
 

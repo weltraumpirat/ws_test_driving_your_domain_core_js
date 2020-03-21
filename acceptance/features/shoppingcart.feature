@@ -2,14 +2,14 @@ Feature: A Shopping Cart Example
 
   Background:
     Given the following available products:
-      | Name              | PackagingType | Amount | Price    |
-      | Whole Milk        | Carton        | 1l     | 1.19 EUR |
-      | Whole Milk        | Carton        | 0.5l   | 0.69 EUR |
-      | White Bread       | Loaf          | 500g   | 1.19 EUR |
-      | Whole Wheat Bread | Loaf          | 500g   | 1.59 EUR |
-      | Organic Bread     | Loaf          | 500g   | 2.19 EUR |
-      | Butter            | Pack          | 250g   | 1.69 EUR |
-      | Organic  Butter   | Pack          | 250g   | 2.39 EUR |
+      | Id | Name              | PackagingType | Amount | Price    |
+      | 1  | Whole Milk        | Carton        | 1l     | 1.19 EUR |
+      | 2  | Whole Milk        | Carton        | 0.5l   | 0.69 EUR |
+      | 3  | White Bread       | Loaf          | 500g   | 1.19 EUR |
+      | 4  | Whole Wheat Bread | Loaf          | 500g   | 1.59 EUR |
+      | 5  | Organic Bread     | Loaf          | 500g   | 2.19 EUR |
+      | 6  | Butter            | Pack          | 250g   | 1.69 EUR |
+      | 7  | Organic  Butter   | Pack          | 250g   | 2.39 EUR |
 
   Scenario: Empty cart
     Given the empty shopping cart

@@ -6,16 +6,25 @@ export enum PackagingType {
   PACK = 'Pack'
 }
 
+function ensure<T>(thing: T | undefined): T  {
+  if(!thing) throw new Error('Object should not be undefined.')
+  return thing
+}
+
 export class Product {
+  public readonly id: string
   public readonly name: string
   public readonly packagingType: PackagingType
   public readonly price: string
   public readonly amount: string
 
-  public constructor(name: string,
+  public constructor(
+    id: string,
+    name: string,
     packagingType: PackagingType,
     amount: string,
     price: string) {
+    this.id = id
     this.amount = amount
     this.price = price
     this.packagingType = packagingType
@@ -23,6 +32,6 @@ export class Product {
   }
 
   public static fromData(data: ProductData): Product {
-    return new Product(data.name, data.packagingType, data.amount, data.price)
+    return new Product(ensure(data.id), data.name, data.packagingType, data.amount, data.price)
   }
 }
