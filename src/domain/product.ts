@@ -1,6 +1,7 @@
 import {ProductData} from '../api/products_api'
 import uuid from 'uuid/v4'
 import {ensure} from '../types'
+import {Aggregate} from './aggregate'
 
 export enum PackagingType {
   CARTON = 'Carton',
@@ -8,8 +9,7 @@ export enum PackagingType {
   PACK = 'Pack'
 }
 
-export class Product {
-  public readonly id: string
+export class Product extends Aggregate {
   public readonly name: string
   public readonly packagingType: PackagingType
   public readonly price: string
@@ -21,7 +21,7 @@ export class Product {
     packagingType: PackagingType,
     amount: string,
     price: string) {
-    this.id = id
+    super(id)
     this.amount = amount
     this.price = price
     this.packagingType = packagingType
