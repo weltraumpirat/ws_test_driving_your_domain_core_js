@@ -1,6 +1,6 @@
 // @ts-ignore
 import uuid from 'uuid/v4'
-import {ShoppingCartItemData} from '../api/shoppingcart_api'
+import {ShoppingCartItemData} from '../api/shoppingcarts_api'
 import {UUID} from '../types'
 
 export class ShoppingCartItem {

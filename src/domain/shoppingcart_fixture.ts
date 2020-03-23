@@ -2,24 +2,16 @@ import {
   ShoppingCart,
   ShoppingCartItem,
   ShoppingCartRepository
-} from '../domain/shoppingcart'
-import {CheckoutService} from '../domain/checkoutservice'
-import {Order} from '../domain/order'
-import {ProductsApi} from './products_api'
-import {validateShoppingCartItem} from '../validation'
-import {toData} from '../conversion'
+} from './shoppingcart'
+import {CheckoutService} from './checkoutservice'
+import {ProductsApi} from '../api/products_api'
 import {UUID} from '../types'
+import {validateShoppingCartItem} from '../validation'
+import {Order} from './order'
+import {toData} from '../conversion'
+import {ShoppingCartItemData} from '../api/shoppingcarts_api'
 
-export interface ShoppingCartItemData {
-  id: string
-  name: string
-  label?: string
-  packagingType: string
-  amount: string
-  price: string
-}
-
-export class ShoppingCartApi {
+export class ShoppingCartFixture {
   private _shoppingCartRepository: ShoppingCartRepository
   private _checkoutService: CheckoutService
   private _productCatalogApi: ProductsApi
@@ -36,7 +28,7 @@ export class ShoppingCartApi {
     return cart.id
   }
 
-  public createShoppingCartWithItems(...items: ShoppingCartItemData[]): UUID {
+  public createShoppingCartWithItems(items: ShoppingCartItemData[]): UUID {
     const cart = ShoppingCart.createWithItems(...(items.map(ShoppingCartItem.fromData)))
     this._shoppingCartRepository.create(cart)
     return cart.id
@@ -60,9 +52,6 @@ export class ShoppingCartApi {
     return this._shoppingCartRepository.findById(id).empty
   }
 
-  public getShoppingCartItemCount(id: UUID): number {
-    return this._shoppingCartRepository.findById(id).items.length
-  }
   public getShoppingCartItems(id: UUID): ShoppingCartItemData[] {
     return this._shoppingCartRepository.findById(id).items.map(toData) as ShoppingCartItemData[]
   }

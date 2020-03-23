@@ -1,16 +1,18 @@
 import {setWorldConstructor} from 'cucumber'
 import {
-  ShoppingCartApi
-} from '../../../src/api/shoppingcart_api'
+  ShoppingCartsApi
+} from '../../../src/api/shoppingcarts_api'
 import {ProductsApi} from '../../../src/api/products_api'
 import {UUID} from '../../../src/types'
 import {CheckoutService} from '../../../src/domain/checkoutservice'
 import {ShoppingCartRepositoryInMemory} from '../../../src/persistence/shoppingcart_repository'
 import {ShoppingCartRepository} from '../../../src/domain/shoppingcart'
+import {ShoppingCartFixture} from '../../../src/domain/shoppingcart_fixture'
 
 class World {
   public productCatalogApi: ProductsApi
-  public shoppingCartApi: ShoppingCartApi
+  public shoppingCartFixture: ShoppingCartFixture
+  public shoppingCartApi: ShoppingCartsApi
   public shoppingCartRepository: ShoppingCartRepository
   public checkoutService: CheckoutService
   // noinspection JSUnusedGlobalSymbols
@@ -21,10 +23,12 @@ class World {
     this.productCatalogApi = new ProductsApi()
     this.shoppingCartRepository = new ShoppingCartRepositoryInMemory()
     this.checkoutService = new CheckoutService()
-    this.shoppingCartApi = new ShoppingCartApi(
+    this.shoppingCartFixture = new ShoppingCartFixture(
       this.shoppingCartRepository,
       this.productCatalogApi,
       this.checkoutService)
+    this.shoppingCartApi = new ShoppingCartsApi(this.shoppingCartFixture)
+
   }
 }
 

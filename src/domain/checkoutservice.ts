@@ -2,7 +2,7 @@ import {
   Order,
   OrderPosition
 } from './order'
-import {ShoppingCartItemData} from '../api/shoppingcart_api'
+import {ShoppingCartItemData} from '../api/shoppingcarts_api'
 
 
 type ItemEntry = Map<string, { count: number, price: string }>
