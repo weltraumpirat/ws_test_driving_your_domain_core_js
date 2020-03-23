@@ -80,3 +80,9 @@ export class ShoppingCart {
     return new ShoppingCart(uuid(),[...items])
   }
 }
+
+export interface ShoppingCartRepository {
+  findById(id: string): ShoppingCart
+
+  create(cart: ShoppingCart): void
+}
