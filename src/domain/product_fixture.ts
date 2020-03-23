@@ -1,5 +1,9 @@
 import {Product} from './product'
-import {ProductData} from '../api/products_api'
+import {
+  ProductData,
+  ProductsReadModel
+} from '../api/products_api'
+import {toData} from '../conversion'
 
 export interface ProductRepository {
   findAll(): Product[]
@@ -9,17 +13,16 @@ export interface ProductRepository {
 
 export class ProductFixture {
   private _repository: ProductRepository
+  private _productReadModel: ProductsReadModel
 
-  public constructor(repository: ProductRepository) {
+  public constructor(repository: ProductRepository, productReadModel: ProductsReadModel) {
     this._repository = repository
-  }
-
-  public get products(): Product[] {
-    return this._repository.findAll()
+    this._productReadModel = productReadModel
   }
 
   public addProduct(product: Product): void {
     this._repository.create(product)
+    this._productReadModel.notifyProductCreated(toData(product))
   }
 
   public addProducts(data: ProductData[]): void {

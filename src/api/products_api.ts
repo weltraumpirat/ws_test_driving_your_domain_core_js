@@ -1,10 +1,5 @@
-import {
-  PackagingType,
-  Product
-} from '../domain/product'
+import {PackagingType} from '../domain/product'
 import {ProductFixture} from '../domain/product_fixture'
-import {toData} from '../conversion'
-import {ProductRepositoryInMemory} from '../persistence/product_repository'
 
 export interface ProductData {
   id?: string
@@ -14,11 +9,25 @@ export interface ProductData {
   price: string
 }
 
+export class ProductsReadModel {
+  public readonly products: ProductData[]
+
+  public constructor() {
+    this.products = []
+  }
+
+  public notifyProductCreated(product: ProductData): void {
+    this.products.push(product)
+  }
+}
+
 export class ProductsApi {
   private _fixture: ProductFixture
+  private _productsReadModel: ProductsReadModel
 
-  public constructor(fixture: ProductFixture) {
+  public constructor(fixture: ProductFixture, productsReadModel: ProductsReadModel) {
     this._fixture = fixture
+    this._productsReadModel = productsReadModel
   }
 
   public createCatalogWithProducts(products: ProductData[]): void {
@@ -26,6 +35,6 @@ export class ProductsApi {
   }
 
   public getProducts(): ProductData[] {
-    return this._fixture ? toData(this._fixture.products) : []
+    return this._productsReadModel.products
   }
 }
