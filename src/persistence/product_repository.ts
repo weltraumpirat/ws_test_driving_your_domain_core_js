@@ -15,8 +15,7 @@ export class ProductRepositoryInMemory implements ProductRepository {
     return [...this._products.values()]
   }
 
-  public create(product: Product): string {
+  public create(product: Product): void {
     this._products.set(product.id, product)
-    return product.id
   }
 }

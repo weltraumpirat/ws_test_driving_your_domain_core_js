@@ -1,4 +1,5 @@
 import {ProductData} from '../api/productcatalog_api'
+import uuid from 'uuid/v4'
 
 export enum PackagingType {
   CARTON = 'Carton',
@@ -6,8 +7,8 @@ export enum PackagingType {
   PACK = 'Pack'
 }
 
-function ensure<T>(thing: T | undefined): T  {
-  if(!thing) throw new Error('Object should not be undefined.')
+function ensure<T>(thing: T | undefined): T {
+  if (!thing) throw new Error('Object should not be undefined.')
   return thing
 }
 
@@ -33,5 +34,9 @@ export class Product {
 
   public static fromData(data: ProductData): Product {
     return new Product(ensure(data.id), data.name, data.packagingType, data.amount, data.price)
+  }
+
+  public static create(name: string, packagingType: PackagingType, amount: string, price: string): Product {
+    return new Product(uuid(), name, packagingType, amount, price)
   }
 }

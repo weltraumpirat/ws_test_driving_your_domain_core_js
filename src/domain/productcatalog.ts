@@ -3,7 +3,7 @@ import {Product} from './product'
 export interface ProductRepository {
   findAll(): Product[]
 
-  create(product: Product): string
+  create(product: Product): void
 }
 
 export class ProductCatalog {
@@ -15,6 +15,9 @@ export class ProductCatalog {
 
   public get products(): Product[] {
     return this._repository.findAll()
+  }
+  public addProduct(product: Product): void {
+    this._repository.create(product)
   }
 
   public static create(repository: ProductRepository): ProductCatalog {
