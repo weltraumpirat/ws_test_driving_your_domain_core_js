@@ -23,6 +23,13 @@ describe('ProductFixture', () => {
       expect(catalog.products[0]).toEqual(product)
     })
 
+    it('should store a list of new products', () => {
+      const product = Product.create('Product', PackagingType.PACK, '10', '1.00 EUR')
+      catalog.addProducts([product])
+      expect(catalog.products).toHaveLength(1)
+      expect(catalog.products[0]).toEqual(product)
+    })
+
     describe('and an initial set of products is provided', () => {
       beforeEach(() => {
         catalog = new ProductFixture(new ProductRepositoryInMemory([{
