@@ -7,6 +7,10 @@ import {Order} from '../domain/order'
 import {ProductCatalogApi} from './productcatalog_api'
 import {validateShoppingCartItem} from '../validation'
 import {toData} from '../conversion'
+import {
+  ensure,
+  UUID
+} from '../types'
 
 export interface ShoppingCartItemData {
   id: string
@@ -18,47 +22,55 @@ export interface ShoppingCartItemData {
 }
 
 export class ShoppingCartApi {
-  private _shoppingCart: ShoppingCart
+  private _shoppingCarts: Map<string,ShoppingCart>
   private _checkoutService: CheckoutService
   private _productCatalogApi: ProductCatalogApi
 
   public constructor(productCatalogApi: ProductCatalogApi) {
     this._productCatalogApi = productCatalogApi
-    this._shoppingCart = ShoppingCart.createEmpty()
+    this._shoppingCarts = new Map()
     this._checkoutService = new CheckoutService()
   }
 
-  public createEmptyShoppingCart(): void {
-    this._shoppingCart = ShoppingCart.createEmpty()
+  public createEmptyShoppingCart(): UUID {
+    const cart = ShoppingCart.createEmpty()
+    this._shoppingCarts.set(cart.id, cart)
+    return cart.id
   }
 
-  public createShoppingCartWithItems(...items: ShoppingCartItemData[]): void {
-    this._shoppingCart = ShoppingCart.createWithItems(...(items.map(ShoppingCartItem.fromData)))
+  public createShoppingCartWithItems(...items: ShoppingCartItemData[]): UUID {
+    const cart = ShoppingCart.createWithItems(...(items.map(ShoppingCartItem.fromData)))
+    this._shoppingCarts.set(cart.id, cart)
+    return cart.id
   }
 
-  public addItemToShoppingCart(data: ShoppingCartItemData): void {
+  public addItemToShoppingCart(cartId: UUID, data: ShoppingCartItemData): void {
     const item = ShoppingCartItem.fromData(data)
     validateShoppingCartItem(item, this._productCatalogApi.getProducts())
-    this._shoppingCart.addItem(item)
+    ensure(this._shoppingCarts.get(cartId)).addItem(item)
   }
 
-  public removeItemFromShoppingCart(item: ShoppingCartItemData): void {
-    this._shoppingCart.removeItem(ShoppingCartItem.fromData(item))
+  public removeItemFromShoppingCart(cartId: UUID, item: ShoppingCartItemData): void {
+    ensure(this._shoppingCarts.get(cartId)).removeItem(ShoppingCartItem.fromData(item))
   }
 
-  public checkOut(): Order {
-    return this._checkoutService.checkOut(this._shoppingCart.items.map(toData) as ShoppingCartItemData[])
+  public checkOut(id: UUID): Order {
+    return this._checkoutService.checkOut(this.findById(id).items.map(toData) as ShoppingCartItemData[])
   }
 
-  public isShoppingCartEmpty(): boolean {
-    return this._shoppingCart.empty
+  public isShoppingCartEmpty(id: UUID): boolean {
+    return this.findById(id).empty
   }
 
-  public getShoppingCartItemCount(): number {
-    return this._shoppingCart.items.length
+  public getShoppingCartItemCount(id: UUID): number {
+    return this.findById(id).items.length
   }
 
-  public getShoppingCartItems(): ShoppingCartItemData[] {
-    return this._shoppingCart.items.map(toData) as ShoppingCartItemData[]
+  private findById(id: string): ShoppingCart {
+    return ensure(this._shoppingCarts.get(id))
+  }
+
+  public getShoppingCartItems(id: UUID): ShoppingCartItemData[] {
+    return this.findById(id).items.map(toData) as ShoppingCartItemData[]
   }
 }

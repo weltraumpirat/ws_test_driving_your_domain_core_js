@@ -1,15 +1,11 @@
 import {ProductData} from '../api/productcatalog_api'
 import uuid from 'uuid/v4'
+import {ensure} from '../types'
 
 export enum PackagingType {
   CARTON = 'Carton',
   LOAF = 'Loaf',
   PACK = 'Pack'
-}
-
-function ensure<T>(thing: T | undefined): T {
-  if (!thing) throw new Error('Object should not be undefined.')
-  return thing
 }
 
 export class Product {

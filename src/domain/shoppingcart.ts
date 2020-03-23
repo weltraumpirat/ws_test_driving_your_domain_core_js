@@ -1,9 +1,10 @@
 // @ts-ignore
 import uuid from 'uuid/v4'
 import {ShoppingCartItemData} from '../api/shoppingcart_api'
+import {UUID} from '../types'
 
 export class ShoppingCartItem {
-  public readonly id: string
+  public readonly id: UUID
   public readonly name: string
   public readonly label: string
   public readonly packagingType: string
@@ -11,7 +12,7 @@ export class ShoppingCartItem {
   public readonly price: string
 
   private constructor(
-    id: string,
+    id: UUID,
     name: string,
     packagingType: string,
     amount: string,
@@ -33,7 +34,7 @@ export class ShoppingCartItem {
   }
 
   public static restore(
-    id: string,
+    id: UUID,
     name: string,
     packagingType: string,
     amount: string,
@@ -47,18 +48,12 @@ export class ShoppingCartItem {
 }
 
 export class ShoppingCart {
+  public readonly id: UUID
   private _items: ShoppingCartItem[]
 
-  private constructor(_items: ShoppingCartItem[]) {
+  private constructor(id: UUID, _items: ShoppingCartItem[] = []) {
+    this.id = id
     this._items = _items
-  }
-
-  public static createEmpty(): ShoppingCart {
-    return new ShoppingCart([])
-  }
-
-  public static createWithItems(...items: ShoppingCartItem[]): ShoppingCart {
-    return new ShoppingCart([...items])
   }
 
   public addItem(item: ShoppingCartItem): void {
@@ -75,5 +70,13 @@ export class ShoppingCart {
 
   public get empty(): boolean {
     return this._items.length === 0
+  }
+
+  public static createEmpty(): ShoppingCart {
+    return new ShoppingCart(uuid())
+  }
+
+  public static createWithItems(...items: ShoppingCartItem[]): ShoppingCart {
+    return new ShoppingCart(uuid(),[...items])
   }
 }
