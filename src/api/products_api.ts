@@ -2,7 +2,7 @@ import {
   PackagingType,
   Product
 } from '../domain/product'
-import {ProductFixture} from '../domain/productFixture'
+import {ProductFixture} from '../domain/product_fixture'
 import {toData} from '../conversion'
 import {ProductRepositoryInMemory} from '../persistence/product_repository'
 
@@ -15,14 +15,17 @@ export interface ProductData {
 }
 
 export class ProductsApi {
-  private _catalog?: ProductFixture
+  private _fixture: ProductFixture
+
+  public constructor(fixture: ProductFixture) {
+    this._fixture = fixture
+  }
 
   public createCatalogWithProducts(products: ProductData[]): void {
-    const repository = new ProductRepositoryInMemory(products.map(Product.fromData))
-    this._catalog = new ProductFixture(repository)
+    this._fixture.addProducts(products)
   }
 
   public getProducts(): ProductData[] {
-    return this._catalog ? toData(this._catalog.products) : []
+    return this._fixture ? toData(this._fixture.products) : []
   }
 }

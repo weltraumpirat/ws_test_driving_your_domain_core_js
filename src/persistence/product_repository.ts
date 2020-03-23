@@ -1,5 +1,5 @@
 import {Product} from '../domain/product'
-import {ProductRepository} from '../domain/productFixture'
+import {ProductRepository} from '../domain/product_fixture'
 
 export class ProductRepositoryInMemory implements ProductRepository {
   private _products: Map<string, Product>

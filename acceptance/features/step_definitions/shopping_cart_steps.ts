@@ -12,8 +12,11 @@ import {
   tableRowsToOrderPositions,
   tableRowsToProducts
 } from '../helpers/table_conversion'
+import {ProductRepositoryInMemory} from '../../../src/persistence/product_repository'
+import {Product} from '../../../src/domain/product'
 
 Given(/^the following available products:$/, function (table: TableDefinition) {
+
   this.productCatalogApi.createCatalogWithProducts(tableRowsToProducts(table))
 })
 Given(/^the empty shopping cart$/, function () {

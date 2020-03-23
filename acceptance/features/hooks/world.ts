@@ -8,9 +8,16 @@ import {CheckoutService} from '../../../src/domain/checkoutservice'
 import {ShoppingCartRepositoryInMemory} from '../../../src/persistence/shoppingcart_repository'
 import {ShoppingCartRepository} from '../../../src/domain/shoppingcart'
 import {ShoppingCartFixture} from '../../../src/domain/shoppingcart_fixture'
+import {ProductRepositoryInMemory} from '../../../src/persistence/product_repository'
+import {Product} from '../../../src/domain/product'
+import {
+  ProductFixture,
+  ProductRepository
+} from '../../../src/domain/product_fixture'
 
 class World {
   public productCatalogApi: ProductsApi
+  public productRepository: ProductRepository
   public shoppingCartFixture: ShoppingCartFixture
   public shoppingCartApi: ShoppingCartsApi
   public shoppingCartRepository: ShoppingCartRepository
@@ -19,8 +26,13 @@ class World {
   public cartId?: UUID
 
 
+  public productFixture: ProductFixture
+
   public constructor() {
-    this.productCatalogApi = new ProductsApi()
+    this.productRepository = new ProductRepositoryInMemory()
+    this.productFixture = new ProductFixture(this.productRepository)
+    this.productCatalogApi = new ProductsApi(this.productFixture)
+
     this.shoppingCartRepository = new ShoppingCartRepositoryInMemory()
     this.checkoutService = new CheckoutService()
     this.shoppingCartFixture = new ShoppingCartFixture(
@@ -28,7 +40,6 @@ class World {
       this.productCatalogApi,
       this.checkoutService)
     this.shoppingCartApi = new ShoppingCartsApi(this.shoppingCartFixture)
-
   }
 }
 

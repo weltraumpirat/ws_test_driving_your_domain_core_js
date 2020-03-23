@@ -1,11 +1,11 @@
-import {ProductFixture} from './productFixture'
+import {ProductFixture} from './product_fixture'
 import {
   PackagingType,
   Product
 } from './product'
 import {ProductRepositoryInMemory} from '../persistence/product_repository'
 
-describe('ProductCatalog', () => {
+describe('ProductFixture', () => {
   let catalog: ProductFixture
   describe('when created', () => {
     beforeEach(() => {
