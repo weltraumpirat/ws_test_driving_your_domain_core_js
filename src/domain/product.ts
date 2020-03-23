@@ -1,4 +1,4 @@
-import {ProductData} from '../api/productcatalog_api'
+import {ProductData} from '../api/products_api'
 import uuid from 'uuid/v4'
 import {ensure} from '../types'
 

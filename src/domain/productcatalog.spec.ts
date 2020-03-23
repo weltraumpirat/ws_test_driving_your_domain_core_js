@@ -1,4 +1,4 @@
-import {ProductCatalog} from './productcatalog'
+import {ProductFixture} from './productFixture'
 import {
   PackagingType,
   Product
@@ -6,10 +6,10 @@ import {
 import {ProductRepositoryInMemory} from '../persistence/product_repository'
 
 describe('ProductCatalog', () => {
-  let catalog: ProductCatalog
+  let catalog: ProductFixture
   describe('when created', () => {
     beforeEach(() => {
-      catalog = ProductCatalog.create(new ProductRepositoryInMemory())
+      catalog = new ProductFixture(new ProductRepositoryInMemory())
     })
 
     it('should be empty', () => {
@@ -25,7 +25,7 @@ describe('ProductCatalog', () => {
 
     describe('and an initial set of products is provided', () => {
       beforeEach(() => {
-        catalog = ProductCatalog.create(new ProductRepositoryInMemory([{
+        catalog = new ProductFixture(new ProductRepositoryInMemory([{
           id: '1',
           name: 'Product',
           packagingType: PackagingType.PACK,

@@ -5,7 +5,7 @@ import {
 } from '../domain/shoppingcart'
 import {CheckoutService} from '../domain/checkoutservice'
 import {Order} from '../domain/order'
-import {ProductCatalogApi} from './productcatalog_api'
+import {ProductsApi} from './products_api'
 import {validateShoppingCartItem} from '../validation'
 import {toData} from '../conversion'
 import {UUID} from '../types'
@@ -22,9 +22,9 @@ export interface ShoppingCartItemData {
 export class ShoppingCartApi {
   private _shoppingCartRepository: ShoppingCartRepository
   private _checkoutService: CheckoutService
-  private _productCatalogApi: ProductCatalogApi
+  private _productCatalogApi: ProductsApi
 
-  public constructor(repository: ShoppingCartRepository, productCatalogApi: ProductCatalogApi, checkoutService: CheckoutService) {
+  public constructor(repository: ShoppingCartRepository, productCatalogApi: ProductsApi, checkoutService: CheckoutService) {
     this._shoppingCartRepository = repository
     this._productCatalogApi = productCatalogApi
     this._checkoutService = checkoutService
@@ -35,6 +35,7 @@ export class ShoppingCartApi {
     this._shoppingCartRepository.create(cart)
     return cart.id
   }
+
   public createShoppingCartWithItems(...items: ShoppingCartItemData[]): UUID {
     const cart = ShoppingCart.createWithItems(...(items.map(ShoppingCartItem.fromData)))
     this._shoppingCartRepository.create(cart)

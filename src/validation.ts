@@ -1,5 +1,5 @@
 import {ShoppingCartItem} from './domain/shoppingcart'
-import {ProductData} from './api/productcatalog_api'
+import {ProductData} from './api/products_api'
 
 export function validateShoppingCartItem(item: ShoppingCartItem, products: ProductData[]): void {
   for (let i = 0; i < products.length; i++) {

@@ -6,7 +6,7 @@ export interface ProductRepository {
   create(product: Product): void
 }
 
-export class ProductCatalog {
+export class ProductFixture {
   private _repository: ProductRepository
 
   public constructor(repository: ProductRepository) {
@@ -18,9 +18,5 @@ export class ProductCatalog {
   }
   public addProduct(product: Product): void {
     this._repository.create(product)
-  }
-
-  public static create(repository: ProductRepository): ProductCatalog {
-    return new ProductCatalog(repository)
   }
 }
