@@ -51,9 +51,9 @@ export class ShoppingCart {
   public readonly id: UUID
   private _items: ShoppingCartItem[]
 
-  private constructor(id: UUID, _items: ShoppingCartItem[] = []) {
+  private constructor(id: UUID, items: ShoppingCartItem[] = []) {
     this.id = id
-    this._items = _items
+    this._items = items
   }
 
   public addItem(item: ShoppingCartItem): void {
@@ -78,6 +78,10 @@ export class ShoppingCart {
 
   public static createWithItems(...items: ShoppingCartItem[]): ShoppingCart {
     return new ShoppingCart(uuid(),[...items])
+  }
+
+  public static restore(id: UUID, items: ShoppingCartItem[] = []): ShoppingCart {
+    return new ShoppingCart(id, items)
   }
 }
 

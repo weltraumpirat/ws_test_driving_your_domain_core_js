@@ -18,11 +18,11 @@ export class ShoppingCartsApi {
   }
 
   public createEmptyShoppingCart(): string {
-    return this._fixture.createEmptyShoppingCart()
+    return this._fixture.createShoppingCart([])
   }
 
   public createShoppingCartWithItems(...items: ShoppingCartItemData[]): string {
-    return this._fixture.createShoppingCartWithItems(items)
+    return this._fixture.createShoppingCart(items)
   }
 
   public addItemToShoppingCart(cartId: string, data: ShoppingCartItemData): void {

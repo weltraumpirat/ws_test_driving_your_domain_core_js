@@ -22,13 +22,7 @@ export class ShoppingCartFixture {
     this._checkoutService = checkoutService
   }
 
-  public createEmptyShoppingCart(): UUID {
-    const cart = ShoppingCart.createEmpty()
-    this._shoppingCartRepository.create(cart)
-    return cart.id
-  }
-
-  public createShoppingCartWithItems(items: ShoppingCartItemData[]): UUID {
+  public createShoppingCart(items: ShoppingCartItemData[]): UUID {
     const cart = ShoppingCart.createWithItems(...(items.map(ShoppingCartItem.fromData)))
     this._shoppingCartRepository.create(cart)
     return cart.id
