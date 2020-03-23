@@ -6,16 +6,25 @@ import {ProductCatalogApi} from '../../../src/api/productcatalog_api'
 import {UUID} from '../../../src/types'
 import {CheckoutService} from '../../../src/domain/checkoutservice'
 import {ShoppingCartRepositoryInMemory} from '../../../src/persistence/shoppingcart_repository'
+import {ShoppingCartRepository} from '../../../src/domain/shoppingcart'
 
 class World {
   public productCatalogApi: ProductCatalogApi
   public shoppingCartApi: ShoppingCartApi
+  public shoppingCartRepository: ShoppingCartRepository
+  public checkoutService: CheckoutService
   // noinspection JSUnusedGlobalSymbols
   public cartId?: UUID
 
+
   public constructor() {
     this.productCatalogApi = new ProductCatalogApi()
-    this.shoppingCartApi = new ShoppingCartApi(new ShoppingCartRepositoryInMemory(), this.productCatalogApi, new CheckoutService())
+    this.shoppingCartRepository = new ShoppingCartRepositoryInMemory()
+    this.checkoutService = new CheckoutService()
+    this.shoppingCartApi = new ShoppingCartApi(
+      this.shoppingCartRepository,
+      this.productCatalogApi,
+      this.checkoutService)
   }
 }
 
