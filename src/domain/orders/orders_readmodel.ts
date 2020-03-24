@@ -1,5 +1,5 @@
-import {UUID} from '../types'
-import {OrderData} from './shoppingcart_fixture'
+import {UUID} from '../../types'
+import {OrderData} from '../shoppingcarts/shoppingcart_fixture'
 
 export class OrdersReadModel {
   public readonly orders: Map<UUID, OrderData>

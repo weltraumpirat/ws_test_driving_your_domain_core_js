@@ -1,7 +1,7 @@
 import {
   ShoppingCart,
   ShoppingCartRepository
-} from '../domain/shoppingcart'
+} from '../domain/shoppingcarts/shoppingcart'
 import {ensure} from '../types'
 
 export class ShoppingCartRepositoryInMemory implements ShoppingCartRepository {

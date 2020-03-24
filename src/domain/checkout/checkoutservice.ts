@@ -1,9 +1,9 @@
 import {
   Order,
   OrderPosition
-} from './order'
-import {ShoppingCartItemData} from '../api/shoppingcarts_api'
-import {OrdersApi} from '../api/orders_api'
+} from '../orders/order'
+import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
+import {OrdersApi} from '../../api/orders_api'
 
 
 type ItemEntry = Map<string, { count: number, price: string }>

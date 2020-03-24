@@ -1,6 +1,6 @@
-import {PackagingType} from '../domain/product'
-import {ProductFixture} from '../domain/product_fixture'
-import {ProductsReadModel} from '../domain/products_readmodel'
+import {PackagingType} from '../domain/products/product'
+import {ProductFixture} from '../domain/products/product_fixture'
+import {ProductsReadModel} from '../domain/products/products_readmodel'
 
 export interface ProductData {
   id?: string

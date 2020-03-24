@@ -3,7 +3,7 @@ import {
   PackagingType,
   Product
 } from './product'
-import {ProductRepositoryInMemory} from '../persistence/product_repository'
+import {ProductRepositoryInMemory} from '../../persistence/product_repository'
 import {ProductsReadModel} from './products_readmodel'
 
 describe('ProductFixture', () => {

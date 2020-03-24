@@ -1,14 +1,14 @@
 import {CheckoutService} from './checkoutservice'
-import {equalOrderIgnoringIds} from '../comparison'
-import {ShoppingCartItem} from './shoppingcart'
+import {equalOrderIgnoringIds} from '../../comparison'
+import {ShoppingCartItem} from '../shoppingcarts/shoppingcart'
 import {
   Order,
   OrderPosition
-} from './order'
+} from '../orders/order'
 import {
   OrdersApi
-} from '../api/orders_api'
-import {OrdersReadModel} from './orders_readmodel'
+} from '../../api/orders_api'
+import {OrdersReadModel} from '../orders/orders_readmodel'
 
 describe('CheckoutService:', () => {
   let checkoutService: CheckoutService

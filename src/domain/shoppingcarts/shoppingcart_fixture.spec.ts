@@ -1,31 +1,31 @@
 import {
   ShoppingCartFixture
 } from './shoppingcart_fixture'
-import {ShoppingCartRepositoryInMemory} from '../persistence/shoppingcart_repository'
+import {ShoppingCartRepositoryInMemory} from '../../persistence/shoppingcart_repository'
 import {
   ProductData
-} from '../api/products_api'
-import {CheckoutService} from './checkoutservice'
+} from '../../api/products_api'
+import {CheckoutService} from '../checkout/checkoutservice'
 import {
   ShoppingCart,
   ShoppingCartItem
 } from './shoppingcart'
-import {PackagingType} from './product'
-import {toData} from '../conversion'
+import {PackagingType} from '../products/product'
+import {toData} from '../../conversion'
 import {
   ShoppingCartItemData
-} from '../api/shoppingcarts_api'
+} from '../../api/shoppingcarts_api'
 import {
   OrdersApi
-} from '../api/orders_api'
-import {ProductsReadModel} from './products_readmodel'
+} from '../../api/orders_api'
+import {ProductsReadModel} from '../products/products_readmodel'
 import {ShoppingCartsReadModel} from './shoppingcarts_readmodel'
-import {OrdersReadModel} from './orders_readmodel'
+import {OrdersReadModel} from '../orders/orders_readmodel'
 
 
-jest.mock('../api/products_api')
-jest.mock('../api/orders_api')
-jest.mock('./checkoutservice')
+jest.mock('../../api/products_api')
+jest.mock('../../api/orders_api')
+jest.mock('../checkout/checkoutservice')
 
 const ITEM = ShoppingCartItem.fromData(
   {

@@ -1,8 +1,8 @@
 import {Product} from './product'
 import {
   ProductData
-} from '../api/products_api'
-import {toData} from '../conversion'
+} from '../../api/products_api'
+import {toData} from '../../conversion'
 import {ProductsReadModel} from './products_readmodel'
 
 export interface ProductRepository {

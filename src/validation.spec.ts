@@ -1,8 +1,8 @@
 import {
   PackagingType,
   Product
-} from './domain/product'
-import {ShoppingCartItem} from './domain/shoppingcart'
+} from './domain/products/product'
+import {ShoppingCartItem} from './domain/shoppingcarts/shoppingcart'
 import {validateShoppingCartItem} from './validation'
 
 describe('validateShoppingCartItem', () => {

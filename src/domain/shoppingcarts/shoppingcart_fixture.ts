@@ -3,15 +3,15 @@ import {
   ShoppingCartItem,
   ShoppingCartRepository
 } from './shoppingcart'
-import {CheckoutService} from './checkoutservice'
-import {UUID} from '../types'
-import {validateShoppingCartItem} from '../validation'
-import {OrderPosition} from './order'
-import {toData} from '../conversion'
+import {CheckoutService} from '../checkout/checkoutservice'
+import {UUID} from '../../types'
+import {validateShoppingCartItem} from '../../validation'
+import {OrderPosition} from '../orders/order'
+import {toData} from '../../conversion'
 import {
   ShoppingCartItemData
-} from '../api/shoppingcarts_api'
-import {ProductsReadModel} from './products_readmodel'
+} from '../../api/shoppingcarts_api'
+import {ProductsReadModel} from '../products/products_readmodel'
 import {ShoppingCartsReadModel} from './shoppingcarts_readmodel'
 
 export interface ShoppingCartData {

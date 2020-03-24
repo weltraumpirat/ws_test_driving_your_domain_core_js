@@ -1,7 +1,7 @@
-import {ProductData} from '../api/products_api'
+import {ProductData} from '../../api/products_api'
 import uuid from 'uuid/v4'
-import {ensure} from '../types'
-import {Aggregate} from './aggregate'
+import {ensure} from '../../types'
+import {Aggregate} from '../aggregate'
 
 export enum PackagingType {
   CARTON = 'Carton',

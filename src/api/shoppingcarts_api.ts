@@ -1,4 +1,4 @@
-import {ShoppingCartFixture} from '../domain/shoppingcart_fixture'
+import {ShoppingCartFixture} from '../domain/shoppingcarts/shoppingcart_fixture'
 
 export interface ShoppingCartItemData {
   id: string

@@ -1,4 +1,4 @@
-import {ProductData} from '../api/products_api'
+import {ProductData} from '../../api/products_api'
 
 export class ProductsReadModel {
   public readonly products: ProductData[]

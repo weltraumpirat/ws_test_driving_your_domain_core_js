@@ -1,6 +1,6 @@
-import {OrderData} from '../domain/shoppingcart_fixture'
+import {OrderData} from '../domain/shoppingcarts/shoppingcart_fixture'
 import {toData} from '../conversion'
-import {OrdersReadModel} from '../domain/orders_readmodel'
+import {OrdersReadModel} from '../domain/orders/orders_readmodel'
 
 export class OrdersApi {
   private _readModel: OrdersReadModel

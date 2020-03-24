@@ -1,7 +1,7 @@
 import {
   ensure,
   UUID
-} from '../types'
+} from '../../types'
 import {ShoppingCartData} from './shoppingcart_fixture'
 import {ShoppingCart} from './shoppingcart'
 

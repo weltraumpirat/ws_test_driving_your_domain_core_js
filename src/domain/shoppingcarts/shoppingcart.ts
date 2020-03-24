@@ -1,8 +1,8 @@
 // @ts-ignore
 import uuid from 'uuid/v4'
-import {ShoppingCartItemData} from '../api/shoppingcarts_api'
-import {UUID} from '../types'
-import {Aggregate} from './aggregate'
+import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
+import {UUID} from '../../types'
+import {Aggregate} from '../aggregate'
 
 export class ShoppingCartItem {
   public readonly id: UUID

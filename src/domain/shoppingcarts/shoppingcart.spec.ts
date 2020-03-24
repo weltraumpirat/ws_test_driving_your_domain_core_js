@@ -2,7 +2,7 @@ import {
   ShoppingCart,
   ShoppingCartItem
 } from './shoppingcart'
-import {PackagingType} from './product'
+import {PackagingType} from '../products/product'
 
 describe('Shopping Cart:', () => {
   let item: ShoppingCartItem
