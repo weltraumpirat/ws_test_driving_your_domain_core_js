@@ -3,8 +3,7 @@ import {
 } from './shoppingcart_fixture'
 import {ShoppingCartRepositoryInMemory} from '../persistence/shoppingcart_repository'
 import {
-  ProductData,
-  ProductsReadModel
+  ProductData
 } from '../api/products_api'
 import {CheckoutService} from './checkoutservice'
 import {
@@ -14,13 +13,14 @@ import {
 import {PackagingType} from './product'
 import {toData} from '../conversion'
 import {
-  ShoppingCartItemData,
-  ShoppingCartsReadModel
+  ShoppingCartItemData
 } from '../api/shoppingcarts_api'
 import {
-  OrdersApi,
-  OrdersReadModel
+  OrdersApi
 } from '../api/orders_api'
+import {ProductsReadModel} from './products_readmodel'
+import {ShoppingCartsReadModel} from './shoppingcarts_readmodel'
+import {OrdersReadModel} from './orders_readmodel'
 
 
 jest.mock('../api/products_api')

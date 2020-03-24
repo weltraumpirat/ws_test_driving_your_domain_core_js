@@ -6,9 +6,9 @@ import {
   OrderPosition
 } from './order'
 import {
-  OrdersApi,
-  OrdersReadModel
+  OrdersApi
 } from '../api/orders_api'
+import {OrdersReadModel} from './orders_readmodel'
 
 describe('CheckoutService:', () => {
   let checkoutService: CheckoutService

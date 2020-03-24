@@ -1,11 +1,9 @@
 import {setWorldConstructor} from 'cucumber'
 import {
-  ShoppingCartsApi,
-  ShoppingCartsReadModel
+  ShoppingCartsApi
 } from '../../../src/api/shoppingcarts_api'
 import {
-  ProductsApi,
-  ProductsReadModel
+  ProductsApi
 } from '../../../src/api/products_api'
 import {UUID} from '../../../src/types'
 import {CheckoutService} from '../../../src/domain/checkoutservice'
@@ -18,9 +16,11 @@ import {
   ProductRepository
 } from '../../../src/domain/product_fixture'
 import {
-  OrdersApi,
-  OrdersReadModel
+  OrdersApi
 } from '../../../src/api/orders_api'
+import {ProductsReadModel} from '../../../src/domain/products_readmodel'
+import {ShoppingCartsReadModel} from '../../../src/domain/shoppingcarts_readmodel'
+import {OrdersReadModel} from '../../../src/domain/orders_readmodel'
 
 class World {
   public productsApi: ProductsApi

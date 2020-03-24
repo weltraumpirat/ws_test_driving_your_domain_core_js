@@ -4,7 +4,7 @@ import {
   Product
 } from './product'
 import {ProductRepositoryInMemory} from '../persistence/product_repository'
-import {ProductsReadModel} from '../api/products_api'
+import {ProductsReadModel} from './products_readmodel'
 
 describe('ProductFixture', () => {
   let catalog: ProductFixture

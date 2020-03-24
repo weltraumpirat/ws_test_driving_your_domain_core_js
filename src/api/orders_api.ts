@@ -1,18 +1,6 @@
 import {OrderData} from '../domain/shoppingcart_fixture'
 import {toData} from '../conversion'
-import {UUID} from '../types'
-
-export class OrdersReadModel {
-  public readonly orders: Map<UUID, OrderData>
-
-  public constructor() {
-    this.orders = new Map()
-  }
-
-  public notifyOrderCreated(order: OrderData): void {
-    this.orders.set(order.id, order)
-  }
-}
+import {OrdersReadModel} from '../domain/orders_readmodel'
 
 export class OrdersApi {
   private _readModel: OrdersReadModel

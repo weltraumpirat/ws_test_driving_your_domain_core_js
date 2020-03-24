@@ -1,9 +1,9 @@
 import {Product} from './product'
 import {
-  ProductData,
-  ProductsReadModel
+  ProductData
 } from '../api/products_api'
 import {toData} from '../conversion'
+import {ProductsReadModel} from './products_readmodel'
 
 export interface ProductRepository {
   findAll(): Product[]

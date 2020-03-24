@@ -1,5 +1,6 @@
 import {PackagingType} from '../domain/product'
 import {ProductFixture} from '../domain/product_fixture'
+import {ProductsReadModel} from '../domain/products_readmodel'
 
 export interface ProductData {
   id?: string
@@ -7,18 +8,6 @@ export interface ProductData {
   packagingType: PackagingType
   amount: string
   price: string
-}
-
-export class ProductsReadModel {
-  public readonly products: ProductData[]
-
-  public constructor() {
-    this.products = []
-  }
-
-  public notifyProductCreated(product: ProductData): void {
-    this.products.push(product)
-  }
 }
 
 export class ProductsApi {

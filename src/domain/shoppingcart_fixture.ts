@@ -4,15 +4,15 @@ import {
   ShoppingCartRepository
 } from './shoppingcart'
 import {CheckoutService} from './checkoutservice'
-import {ProductsReadModel} from '../api/products_api'
 import {UUID} from '../types'
 import {validateShoppingCartItem} from '../validation'
 import {OrderPosition} from './order'
 import {toData} from '../conversion'
 import {
-  ShoppingCartItemData,
-  ShoppingCartsReadModel
+  ShoppingCartItemData
 } from '../api/shoppingcarts_api'
+import {ProductsReadModel} from './products_readmodel'
+import {ShoppingCartsReadModel} from './shoppingcarts_readmodel'
 
 export interface ShoppingCartData {
   id: UUID
