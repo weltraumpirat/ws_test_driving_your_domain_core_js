@@ -1,8 +1,10 @@
-import {ShoppingCartFixture} from './shoppingcart_fixture'
+import {
+  ShoppingCartFixture
+} from './shoppingcart_fixture'
 import {ShoppingCartRepositoryInMemory} from '../persistence/shoppingcart_repository'
 import {
   ProductData,
-  ProductsApi
+  ProductsReadModel
 } from '../api/products_api'
 import {CheckoutService} from './checkoutservice'
 import {
@@ -11,10 +13,18 @@ import {
 } from './shoppingcart'
 import {PackagingType} from './product'
 import {toData} from '../conversion'
-import {ShoppingCartItemData} from '../api/shoppingcarts_api'
+import {
+  ShoppingCartItemData,
+  ShoppingCartsReadModel
+} from '../api/shoppingcarts_api'
+import {
+  OrdersApi,
+  OrdersReadModel
+} from '../api/orders_api'
 
 
 jest.mock('../api/products_api')
+jest.mock('../api/orders_api')
 jest.mock('./checkoutservice')
 
 const ITEM = ShoppingCartItem.fromData(
@@ -29,8 +39,11 @@ const ITEM = ShoppingCartItem.fromData(
 describe('ShoppingCartFixture', () => {
   let fixture: ShoppingCartFixture
   beforeEach(() => {
-    // @ts-ignore
-    fixture = new ShoppingCartFixture(new ShoppingCartRepositoryInMemory(), new ProductsApi(), new CheckoutService())
+    fixture = new ShoppingCartFixture(
+      new ShoppingCartRepositoryInMemory(),
+      new ShoppingCartsReadModel(),
+      new ProductsReadModel(),
+      new CheckoutService(new OrdersApi(new OrdersReadModel())))
   })
 
   it('should create an empty ShoppingCart', () => {
@@ -38,14 +51,15 @@ describe('ShoppingCartFixture', () => {
   })
 
   describe('when an empty ShoppingCart exists', () => {
-    let productsApi: ProductsApi
+    let productsReadModel: ProductsReadModel
     beforeEach(() => {
       // @ts-ignore
-      productsApi = new ProductsApi()
+      productsReadModel = new ProductsReadModel()
       fixture = new ShoppingCartFixture(
         new ShoppingCartRepositoryInMemory([ShoppingCart.restore('1')]),
-        productsApi,
-        new CheckoutService())
+        new ShoppingCartsReadModel(),
+        productsReadModel,
+        new CheckoutService(new OrdersApi( new OrdersReadModel())))
     })
 
     it('should return if that ShoppingCart is empty', () => {
@@ -60,7 +74,9 @@ describe('ShoppingCartFixture', () => {
       let itemData: ShoppingCartItemData
       beforeEach(() => {
         itemData = toData(ITEM)
-        productsApi.getProducts = jest.fn(() => [itemData as ProductData])
+        // @ts-ignore
+        // noinspection JSConstantReassignment
+        productsReadModel.products = [itemData as ProductData]
       })
 
       it('should add a valid item', () => {
@@ -75,18 +91,18 @@ describe('ShoppingCartFixture', () => {
         expect(() => fixture.addItemToShoppingCart('unknown', {...itemData, name: 'invalid name'})).toThrow()
       })
     })
-
   })
 
   describe('when a loaded ShoppingCart exists', () => {
     let checkoutService: CheckoutService
     beforeEach(() => {
 
-      checkoutService = new CheckoutService()
+      checkoutService = new CheckoutService(new OrdersApi(new OrdersReadModel()))
       fixture = new ShoppingCartFixture(
         new ShoppingCartRepositoryInMemory([ShoppingCart.restore('1', [ITEM])]),
+        new ShoppingCartsReadModel(),
         // @ts-ignore
-        new ProductsApi(),
+        new ProductsReadModel(),
         checkoutService)
     })
 
@@ -121,7 +137,7 @@ describe('ShoppingCartFixture', () => {
     })
 
     it('should throw when trying to remove an item from an unknown ShoppingCart', () => {
-      expect(()=>fixture.removeItemFromShoppingCart('unknown', toData(ITEM))).toThrow()
+      expect(() => fixture.removeItemFromShoppingCart('unknown', toData(ITEM))).toThrow()
     })
   })
 })

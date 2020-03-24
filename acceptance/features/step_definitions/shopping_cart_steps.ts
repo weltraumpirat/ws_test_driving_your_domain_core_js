@@ -45,7 +45,8 @@ Then(/^the first item is "([^"]*)"$/, function (itemName: string) {
 })
 Then(/^the following order with id "([^"]*)" and a total amount due of "([^"]*)" is created:$/, function (id: string, price: string, table: TableDefinition) {
   const positions = tableRowsToOrderPositions(table)
-  expect(this.order.total).toEqual(price)
-  expect(equalPositions(this.order.positions, positions)).toBe(true)
+  const order = this.ordersReadModel.orders.values().next().value
+  expect(order.total).toEqual(price)
+  expect(equalPositions(order.positions, positions)).toBe(true)
 })
 

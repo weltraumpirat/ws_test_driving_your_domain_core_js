@@ -1,6 +1,7 @@
 import {setWorldConstructor} from 'cucumber'
 import {
-  ShoppingCartsApi
+  ShoppingCartsApi,
+  ShoppingCartsReadModel
 } from '../../../src/api/shoppingcarts_api'
 import {
   ProductsApi,
@@ -12,11 +13,14 @@ import {ShoppingCartRepositoryInMemory} from '../../../src/persistence/shoppingc
 import {ShoppingCartRepository} from '../../../src/domain/shoppingcart'
 import {ShoppingCartFixture} from '../../../src/domain/shoppingcart_fixture'
 import {ProductRepositoryInMemory} from '../../../src/persistence/product_repository'
-import {Product} from '../../../src/domain/product'
 import {
   ProductFixture,
   ProductRepository
 } from '../../../src/domain/product_fixture'
+import {
+  OrdersApi,
+  OrdersReadModel
+} from '../../../src/api/orders_api'
 
 class World {
   public productsApi: ProductsApi
@@ -26,11 +30,13 @@ class World {
   public shoppingCartFixture: ShoppingCartFixture
   public shoppingCartApi: ShoppingCartsApi
   public shoppingCartRepository: ShoppingCartRepository
+  public shoppingCartsReadModel: ShoppingCartsReadModel
   public checkoutService: CheckoutService
+  public ordersApi: OrdersApi
+  public ordersReadModel: OrdersReadModel
+
   // noinspection JSUnusedGlobalSymbols
   public cartId?: UUID
-
-
 
 
   public constructor() {
@@ -40,10 +46,14 @@ class World {
     this.productsApi = new ProductsApi(this.productFixture, this.productsReadModel)
 
     this.shoppingCartRepository = new ShoppingCartRepositoryInMemory()
-    this.checkoutService = new CheckoutService()
+    this.shoppingCartsReadModel = new ShoppingCartsReadModel()
+    this.ordersReadModel = new OrdersReadModel()
+    this.ordersApi = new OrdersApi(this.ordersReadModel)
+    this.checkoutService = new CheckoutService(this.ordersApi)
     this.shoppingCartFixture = new ShoppingCartFixture(
       this.shoppingCartRepository,
-      this.productsApi,
+      this.shoppingCartsReadModel,
+      this.productsReadModel,
       this.checkoutService)
     this.shoppingCartApi = new ShoppingCartsApi(this.shoppingCartFixture)
   }

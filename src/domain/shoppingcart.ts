@@ -89,4 +89,6 @@ export interface ShoppingCartRepository {
   findById(id: string): ShoppingCart
 
   create(cart: ShoppingCart): void
+
+  update(cart: ShoppingCart): void
 }

@@ -1,5 +1,12 @@
-import {Order} from '../domain/order'
-import {ShoppingCartFixture} from '../domain/shoppingcart_fixture'
+import {
+  ShoppingCartData,
+  ShoppingCartFixture
+} from '../domain/shoppingcart_fixture'
+import {
+  ensure,
+  UUID
+} from '../types'
+import {ShoppingCart} from '../domain/shoppingcart'
 
 export interface ShoppingCartItemData {
   id: string
@@ -8,6 +15,34 @@ export interface ShoppingCartItemData {
   packagingType: string
   amount: string
   price: string
+}
+
+export class ShoppingCartsReadModel {
+  public readonly carts: Map<UUID, ShoppingCartData>
+
+  public constructor() {
+    this.carts = new Map()
+  }
+
+  public notifyCartCreated(data: ShoppingCartData): void {
+    this.carts.set(data.id, data)
+  }
+
+  public getById(id: UUID): ShoppingCartData {
+    return ensure(this.carts.get(id), `Shopping cart with id:${id} does not exist.`)
+  }
+
+  public notifyItemAdded(data: ShoppingCartData): void {
+    this.carts.set(data.id, data)
+  }
+
+  public notifyItemRemoved(data: ShoppingCartData): void {
+    this.carts.set(data.id, data)
+  }
+
+  public notifyCheckedOut(cart: ShoppingCart): void {
+    this.carts.delete(cart.id)
+  }
 }
 
 export class ShoppingCartsApi {
@@ -33,8 +68,8 @@ export class ShoppingCartsApi {
     this._fixture.removeItemFromShoppingCart(cartId, item)
   }
 
-  public checkOut(id: string): Order {
-    return this._fixture.checkOut(id)
+  public checkOut(id: string): void {
+    this._fixture.checkOut(id)
   }
 
   public getShoppingCartItems(id: string): ShoppingCartItemData[] {

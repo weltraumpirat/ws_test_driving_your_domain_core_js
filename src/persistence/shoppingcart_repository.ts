@@ -19,4 +19,8 @@ export class ShoppingCartRepositoryInMemory implements ShoppingCartRepository {
   public create(cart: ShoppingCart): void {
     this._shoppingCarts.set(cart.id, cart)
   }
+
+  public update(cart: ShoppingCart): void {
+    this._shoppingCarts.set(cart.id, cart)
+  }
 }
