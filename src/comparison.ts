@@ -1,7 +1,8 @@
 import {
   Order,
   OrderPosition
-} from './domain/order'
+} from './domain/orders/order'
+import {toData} from './conversion'
 
 export function equalPositionIgnoringIds(one: OrderPosition, two: OrderPosition): boolean {
   return one.itemName === two.itemName
@@ -21,4 +22,8 @@ export function equalPositions(one: OrderPosition[], two: OrderPosition[]): bool
 export function equalOrderIgnoringIds(one: Order, two: Order): boolean {
   return one.total === two.total
     && equalPositions(one.positions, two.positions)
+}
+
+export function expectEqualData<T>(actual: T, expected: T): void {
+  expect(toData(actual)).toEqual(toData(expected))
 }

@@ -6,21 +6,21 @@ import {
   ProductsApi
 } from '../../../src/api/products_api'
 import {UUID} from '../../../src/types'
-import {CheckoutService} from '../../../src/domain/checkoutservice'
+import {CheckoutService} from '../../../src/domain/checkout/checkoutservice'
 import {ShoppingCartRepositoryInMemory} from '../../../src/persistence/shoppingcart_repository'
-import {ShoppingCartRepository} from '../../../src/domain/shoppingcart'
-import {ShoppingCartFixture} from '../../../src/domain/shoppingcart_fixture'
+import {ShoppingCartRepository} from '../../../src/domain/shoppingcarts/shoppingcart'
+import {ShoppingCartFixture} from '../../../src/domain/shoppingcarts/shoppingcart_fixture'
 import {ProductRepositoryInMemory} from '../../../src/persistence/product_repository'
 import {
   ProductFixture,
   ProductRepository
-} from '../../../src/domain/product_fixture'
+} from '../../../src/domain/products/product_fixture'
 import {
   OrdersApi
 } from '../../../src/api/orders_api'
-import {ProductsReadModel} from '../../../src/domain/products_readmodel'
-import {ShoppingCartsReadModel} from '../../../src/domain/shoppingcarts_readmodel'
-import {OrdersReadModel} from '../../../src/domain/orders_readmodel'
+import {ProductsReadModel} from '../../../src/domain/products/products_readmodel'
+import {ShoppingCartsReadModel} from '../../../src/domain/shoppingcarts/shoppingcarts_readmodel'
+import {OrdersReadModel} from '../../../src/domain/orders/orders_readmodel'
 
 class World {
   public productsApi: ProductsApi
@@ -40,6 +40,7 @@ class World {
 
 
   public constructor() {
+
     this.productRepository = new ProductRepositoryInMemory()
     this.productsReadModel = new ProductsReadModel()
     this.productFixture = new ProductFixture(this.productRepository, this.productsReadModel)

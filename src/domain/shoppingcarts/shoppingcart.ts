@@ -3,6 +3,7 @@ import uuid from 'uuid/v4'
 import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
 import {UUID} from '../../types'
 import {Aggregate} from '../aggregate'
+import {Global} from '../../global'
 
 export class ShoppingCartItem {
   public readonly id: UUID
@@ -52,7 +53,7 @@ export class ShoppingCart extends Aggregate {
   private _items: ShoppingCartItem[]
 
   private constructor(id: UUID, items: ShoppingCartItem[] = []) {
-    super(id)
+    super(id, Global.eventbus)
     this._items = items
   }
 

@@ -1,5 +1,7 @@
 // @ts-ignore
 import uuid from 'uuid/v4'
+import {Aggregate} from '../aggregate'
+import {Global} from '../../global'
 
 export class OrderPosition {
   public readonly id: string
@@ -39,13 +41,12 @@ export class OrderPosition {
   }
 }
 
-export class Order {
-  public readonly id: string
+export class Order extends Aggregate {
   public readonly positions: OrderPosition[]
 
   public constructor(id: string, positions: OrderPosition[]) {
+    super(id, Global.eventbus)
     this.positions = positions
-    this.id = id
   }
 
   public get total(): string {

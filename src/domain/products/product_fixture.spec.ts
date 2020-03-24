@@ -5,6 +5,7 @@ import {
 } from './product'
 import {ProductRepositoryInMemory} from '../../persistence/product_repository'
 import {ProductsReadModel} from './products_readmodel'
+import {expectEqualData} from '../../comparison'
 
 describe('ProductFixture', () => {
   let catalog: ProductFixture
@@ -23,14 +24,14 @@ describe('ProductFixture', () => {
       const product = Product.create('Product', PackagingType.PACK, '10', '1.00 EUR')
       catalog.addProduct(product)
       expect(readModel.products).toHaveLength(1)
-      expect(readModel.products[0]).toEqual(product)
+      expectEqualData(readModel.products[0], product)
     })
 
     it('should store a list of new products', () => {
       const product = Product.create('Product', PackagingType.PACK, '10', '1.00 EUR')
       catalog.addProducts([product])
       expect(readModel.products).toHaveLength(1)
-      expect(readModel.products[0]).toEqual(product)
+      expectEqualData(readModel.products[0], product)
     })
   })
 })
