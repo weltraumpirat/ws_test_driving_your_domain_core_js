@@ -5,15 +5,30 @@ import {
   Order,
   OrderPosition
 } from './order'
+import {
+  OrdersApi,
+  OrdersReadModel
+} from '../api/orders_api'
 
 describe('CheckoutService:', () => {
+  let checkoutService: CheckoutService
+  let readModel: OrdersReadModel
+
+  beforeEach(()=>{
+    readModel = new OrdersReadModel()
+    const api = new OrdersApi(readModel)
+    checkoutService = new CheckoutService(api)
+
+  })
   it('should create an empty Order from zero shopping cart items', () => {
     const expectedOrder = {
       id: '1',
       total: '0 EUR',
       positions: []
     }
-    expect(equalOrderIgnoringIds(new CheckoutService().checkOut([]), expectedOrder)).toBe(true)
+    checkoutService.checkOut([])
+    const order = readModel.orders.values().next()
+    expect(equalOrderIgnoringIds(order.value, expectedOrder)).toBe(true)
   })
 
   it('should create an Order with a single position from one shopping cart item', () => {
@@ -34,8 +49,9 @@ describe('CheckoutService:', () => {
         '1.19 EUR'
       )
     )
-    expect(equalOrderIgnoringIds(new CheckoutService().checkOut([item1]), expectedOrder))
-      .toBe(true)
+    checkoutService.checkOut([item1])
+    const order = readModel.orders.values().next()
+    expect(equalOrderIgnoringIds(order.value, expectedOrder)).toBe(true)
   })
 
   it('should create an Order with a single position from two shopping cart items', () => {
@@ -63,7 +79,9 @@ describe('CheckoutService:', () => {
         '2.38 EUR'
       )
     )
-    expect(equalOrderIgnoringIds(new CheckoutService().checkOut([item1, item2]), expectedOrder))
+    checkoutService.checkOut([item1, item2])
+    const order = readModel.orders.values().next()
+    expect(equalOrderIgnoringIds(order.value, expectedOrder))
       .toBe(true)
   })
 })
