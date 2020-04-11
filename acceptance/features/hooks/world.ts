@@ -19,8 +19,9 @@ import {
   OrdersApi
 } from '../../../src/api/orders_api'
 import {ProductsReadModel} from '../../../src/domain/products/products_readmodel'
-import {ShoppingCartsReadModel} from '../../../src/domain/shoppingcarts/shoppingcarts_readmodel'
+import {ShoppingCartItemsReadModel} from '../../../src/domain/shoppingcarts/shoppingcarts_readmodel'
 import {OrdersReadModel} from '../../../src/domain/orders/orders_readmodel'
+import {ShoppingCartEmptyReadModel} from '../../../src/domain/shoppingcarts/shoppingcart_empty_readmodel'
 
 class World {
   public productsApi: ProductsApi
@@ -30,7 +31,7 @@ class World {
   public shoppingCartFixture: ShoppingCartFixture
   public shoppingCartApi: ShoppingCartsApi
   public shoppingCartRepository: ShoppingCartRepository
-  public shoppingCartsReadModel: ShoppingCartsReadModel
+  public shoppingCartItemsReadModel: ShoppingCartItemsReadModel
   public checkoutService: CheckoutService
   public ordersApi: OrdersApi
   public ordersReadModel: OrdersReadModel
@@ -38,6 +39,8 @@ class World {
   // noinspection JSUnusedGlobalSymbols
   public cartId?: UUID
 
+
+  private shoppingCartEmptyReadModel: ShoppingCartEmptyReadModel
 
   public constructor() {
 
@@ -47,15 +50,12 @@ class World {
     this.productsApi = new ProductsApi(this.productFixture, this.productsReadModel)
 
     this.shoppingCartRepository = new ShoppingCartRepositoryInMemory()
-    this.shoppingCartsReadModel = new ShoppingCartsReadModel()
+    this.shoppingCartItemsReadModel = new ShoppingCartItemsReadModel()
+    this.shoppingCartEmptyReadModel = new ShoppingCartEmptyReadModel()
     this.ordersReadModel = new OrdersReadModel()
     this.ordersApi = new OrdersApi(this.ordersReadModel)
     this.checkoutService = new CheckoutService(this.ordersApi)
-    this.shoppingCartFixture = new ShoppingCartFixture(
-      this.shoppingCartRepository,
-      this.shoppingCartsReadModel,
-      this.productsReadModel,
-      this.checkoutService)
+    this.shoppingCartFixture = new ShoppingCartFixture(this.shoppingCartRepository, this.shoppingCartItemsReadModel, this.shoppingCartEmptyReadModel, this.productsReadModel, this.checkoutService)
     this.shoppingCartApi = new ShoppingCartsApi(this.shoppingCartFixture)
   }
 }

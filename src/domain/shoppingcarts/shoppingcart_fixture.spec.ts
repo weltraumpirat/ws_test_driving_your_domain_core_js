@@ -1,10 +1,9 @@
 import {
+  ShoppingCartData,
   ShoppingCartFixture
 } from './shoppingcart_fixture'
 import {ShoppingCartRepositoryInMemory} from '../../persistence/shoppingcart_repository'
-import {
-  ProductData
-} from '../../api/products_api'
+import {ProductData} from '../../api/products_api'
 import {CheckoutService} from '../checkout/checkoutservice'
 import {
   ShoppingCart,
@@ -12,15 +11,12 @@ import {
 } from './shoppingcart'
 import {PackagingType} from '../products/product'
 import {toData} from '../../conversion'
-import {
-  ShoppingCartItemData
-} from '../../api/shoppingcarts_api'
-import {
-  OrdersApi
-} from '../../api/orders_api'
+import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
+import {OrdersApi} from '../../api/orders_api'
 import {ProductsReadModel} from '../products/products_readmodel'
-import {ShoppingCartsReadModel} from './shoppingcarts_readmodel'
+import {ShoppingCartItemsReadModel} from './shoppingcarts_readmodel'
 import {OrdersReadModel} from '../orders/orders_readmodel'
+import {ShoppingCartEmptyReadModel} from './shoppingcart_empty_readmodel'
 
 
 jest.mock('../../api/products_api')
@@ -38,12 +34,18 @@ const ITEM = ShoppingCartItem.fromData(
 )
 describe('ShoppingCartFixture', () => {
   let fixture: ShoppingCartFixture
+  let productsReadModel: ProductsReadModel
+  let repository: ShoppingCartRepositoryInMemory
+  let itemsReadModel: ShoppingCartItemsReadModel
+  let emptyReadModel: ShoppingCartEmptyReadModel
+  let checkoutService: CheckoutService
   beforeEach(() => {
-    fixture = new ShoppingCartFixture(
-      new ShoppingCartRepositoryInMemory(),
-      new ShoppingCartsReadModel(),
-      new ProductsReadModel(),
-      new CheckoutService(new OrdersApi(new OrdersReadModel())))
+    productsReadModel = new ProductsReadModel()
+    repository = new ShoppingCartRepositoryInMemory()
+    itemsReadModel = new ShoppingCartItemsReadModel()
+    emptyReadModel = new ShoppingCartEmptyReadModel()
+    checkoutService = new CheckoutService(new OrdersApi(new OrdersReadModel()))
+    fixture = new ShoppingCartFixture(repository, itemsReadModel, emptyReadModel, productsReadModel, checkoutService)
   })
 
   it('should create an empty ShoppingCart', () => {
@@ -51,23 +53,20 @@ describe('ShoppingCartFixture', () => {
   })
 
   describe('when an empty ShoppingCart exists', () => {
-    let productsReadModel: ProductsReadModel
     beforeEach(() => {
-      // @ts-ignore
-      productsReadModel = new ProductsReadModel()
-      fixture = new ShoppingCartFixture(
-        new ShoppingCartRepositoryInMemory([ShoppingCart.restore('1')]),
-        new ShoppingCartsReadModel(),
-        productsReadModel,
-        new CheckoutService(new OrdersApi( new OrdersReadModel())))
+      const cart = ShoppingCart.restore('1')
+      repository.create(cart)
+      const cartData: ShoppingCartData = toData(cart)
+      itemsReadModel.notifyCartCreated(cartData)
+      emptyReadModel.notifyCartCreated(cartData)
     })
 
     it('should return if that ShoppingCart is empty', () => {
       expect(fixture.isShoppingCartEmpty('1'))
     })
 
-    it('should throw when querying if unknown ShoppingCart is empty', () => {
-      expect(() => fixture.isShoppingCartEmpty('unknown')).toThrow()
+    it('should return false when querying if unknown ShoppingCart is empty', () => {
+      expect(fixture.isShoppingCartEmpty('unknown')).toBe(false)
     })
 
     describe('and an item is added', () => {
@@ -94,16 +93,14 @@ describe('ShoppingCartFixture', () => {
   })
 
   describe('when a loaded ShoppingCart exists', () => {
-    let checkoutService: CheckoutService
-    beforeEach(() => {
-
-      checkoutService = new CheckoutService(new OrdersApi(new OrdersReadModel()))
-      fixture = new ShoppingCartFixture(
-        new ShoppingCartRepositoryInMemory([ShoppingCart.restore('1', [ITEM])]),
-        new ShoppingCartsReadModel(),
-        // @ts-ignore
-        new ProductsReadModel(),
-        checkoutService)
+    beforeEach(()=>{
+      const cart = ShoppingCart.restore('1', [ITEM])
+      repository.create(cart)
+      const cartData: ShoppingCartData = toData(cart)
+      itemsReadModel.notifyCartCreated(cartData)
+      itemsReadModel.notifyItemAdded(cartData)
+      emptyReadModel.notifyCartCreated(cartData)
+      emptyReadModel.notifyItemAdded(cartData)
     })
 
     it('should return the ShoppingCart\'s items', () => {

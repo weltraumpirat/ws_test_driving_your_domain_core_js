@@ -1,8 +1,6 @@
-import {
-  Order,
-  OrderPosition
-} from './domain/orders/order'
+import {OrderPosition} from './domain/orders/order'
 import {toData} from './conversion'
+import {OrderData} from './domain/shoppingcarts/shoppingcart_fixture'
 
 export function equalPositionIgnoringIds(one: OrderPosition, two: OrderPosition): boolean {
   return one.itemName === two.itemName
@@ -19,7 +17,7 @@ export function equalPositions(one: OrderPosition[], two: OrderPosition[]): bool
   return true
 }
 
-export function equalOrderIgnoringIds(one: Order, two: Order): boolean {
+export function equalOrderIgnoringIds(one: OrderData, two: OrderData): boolean {
   return one.total === two.total
     && equalPositions(one.positions, two.positions)
 }

@@ -1,10 +1,10 @@
-import {OrderPosition} from '../../../src/domain/order'
 import {
   PackagingType,
   Product
-} from '../../../src/domain/product'
+} from '../../../src/domain/products/product'
 import {TableDefinition} from 'cucumber'
-import {ShoppingCartItem} from '../../../src/domain/shoppingcart'
+import {ShoppingCartItem} from '../../../src/domain/shoppingcarts/shoppingcart'
+import {OrderPosition} from '../../../src/domain/orders/order'
 
 export const rowToProduct = (columns: string[]): Product => new Product(columns[0], columns[1], columns[2] as PackagingType, columns[3], columns[4])
 

@@ -50,27 +50,24 @@ export class ShoppingCartItem {
 }
 
 export class ShoppingCart extends Aggregate {
-  private _items: ShoppingCartItem[]
+  public items: ShoppingCartItem[]
 
   private constructor(id: UUID, items: ShoppingCartItem[] = []) {
     super(id, Global.eventbus)
-    this._items = items
+    this.items = items
   }
 
   public addItem(item: ShoppingCartItem): void {
-    this._items.push(item)
+    this.items.push(item)
   }
 
   public removeItem(item: ShoppingCartItem): void {
-    this._items = this._items.filter((i: ShoppingCartItem): boolean => i.id !== item.id)
+    this.items = this.items.filter((i: ShoppingCartItem): boolean => i.id !== item.id)
   }
 
-  public get items(): ShoppingCartItem[] {
-    return this._items.slice()
-  }
 
   public get empty(): boolean {
-    return this._items.length === 0
+    return this.items.length === 0
   }
 
   public static createEmpty(): ShoppingCart {
