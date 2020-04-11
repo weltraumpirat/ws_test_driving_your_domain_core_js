@@ -14,7 +14,7 @@ import {toData} from '../../conversion'
 import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
 import {OrdersApi} from '../../api/orders_api'
 import {ProductsReadModel} from '../products/products_readmodel'
-import {ShoppingCartItemsReadModel} from './shoppingcarts_readmodel'
+import {ShoppingCartItemsReadModel} from './shoppingcart_items_readmodel'
 import {OrdersReadModel} from '../orders/orders_readmodel'
 import {ShoppingCartEmptyReadModel} from './shoppingcart_empty_readmodel'
 

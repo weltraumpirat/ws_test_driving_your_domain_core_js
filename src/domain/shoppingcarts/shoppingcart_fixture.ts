@@ -10,7 +10,7 @@ import {OrderPosition} from '../orders/order'
 import {toData} from '../../conversion'
 import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
 import {ProductsReadModel} from '../products/products_readmodel'
-import {ShoppingCartItemsReadModel} from './shoppingcarts_readmodel'
+import {ShoppingCartItemsReadModel} from './shoppingcart_items_readmodel'
 import {ShoppingCartEmptyReadModel} from './shoppingcart_empty_readmodel'
 
 export interface ShoppingCartData {

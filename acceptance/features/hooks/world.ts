@@ -19,7 +19,7 @@ import {
   OrdersApi
 } from '../../../src/api/orders_api'
 import {ProductsReadModel} from '../../../src/domain/products/products_readmodel'
-import {ShoppingCartItemsReadModel} from '../../../src/domain/shoppingcarts/shoppingcarts_readmodel'
+import {ShoppingCartItemsReadModel} from '../../../src/domain/shoppingcarts/shoppingcart_items_readmodel'
 import {OrdersReadModel} from '../../../src/domain/orders/orders_readmodel'
 import {ShoppingCartEmptyReadModel} from '../../../src/domain/shoppingcarts/shoppingcart_empty_readmodel'
 
