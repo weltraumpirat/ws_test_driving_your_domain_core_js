@@ -17,6 +17,7 @@ import {ProductsReadModel} from '../products/products_readmodel'
 import {ShoppingCartItemsReadModel} from './shoppingcart_items_readmodel'
 import {OrdersReadModel} from '../orders/orders_readmodel'
 import {ShoppingCartEmptyReadModel} from './shoppingcart_empty_readmodel'
+import {UUID} from '../../types'
 
 
 jest.mock('../../api/products_api')
@@ -47,26 +48,34 @@ describe('ShoppingCartFixture', () => {
     checkoutService = new CheckoutService(new OrdersApi(new OrdersReadModel()))
     fixture = new ShoppingCartFixture(repository, itemsReadModel, emptyReadModel, productsReadModel, checkoutService)
   })
-
-  it('should create an empty ShoppingCart', () => {
-    expect(fixture.createShoppingCart([])).toBeDefined()
-  })
-
-  describe('when an empty ShoppingCart exists', () => {
+  describe('when creating an empty Shopping Cart', () => {
+    let id: UUID
     beforeEach(() => {
-      const cart = ShoppingCart.restore('1')
-      repository.create(cart)
-      const cartData: ShoppingCartData = toData(cart)
-      itemsReadModel.notifyCartCreated(cartData)
-      emptyReadModel.notifyCartCreated(cartData)
+      id = fixture.createShoppingCart([])
     })
 
-    it('should return if that ShoppingCart is empty', () => {
-      expect(fixture.isShoppingCartEmpty('1'))
+    it('should return the cart\'s ID', () => {
+      expect(id).toBeDefined()
     })
 
-    it('should return false when querying if unknown ShoppingCart is empty', () => {
+    it('should store the cart in repository', () => {
+      expect(repository.findById(id)).toBeDefined()
+    })
+
+    it('should consider the cart empty', () => {
+      expect(emptyReadModel.isEmpty(id)).toBe(true)
+    })
+
+    it('should also consider an unknown cart empty', () => {
       expect(fixture.isShoppingCartEmpty('unknown')).toBe(false)
+    })
+
+    it('should return no items for the cart', () => {
+      expect(itemsReadModel.getItems(id)).toEqual([])
+    })
+
+    it('should throw when querying unknown ShoppingCart items', () => {
+      expect(() => fixture.getShoppingCartItems('unknown')).toThrow()
     })
 
     describe('and an item is added', () => {
@@ -78,22 +87,51 @@ describe('ShoppingCartFixture', () => {
         productsReadModel.products = [itemData as ProductData]
       })
 
-      it('should add a valid item', () => {
-        fixture.addItemToShoppingCart('1', itemData)
-        expect(fixture.getShoppingCartItems('1')).toEqual([itemData])
+      describe('when the item is valid', () => {
+        beforeEach(() => {
+          fixture.addItemToShoppingCart(id, itemData)
+        })
+        it('should store the item', () => {
+          expect(itemsReadModel.getItems(id)).toEqual([itemData])
+        })
+        it('should no longer consider the cart empty', () => {
+          expect(emptyReadModel.isEmpty(id)).toBe(false)
+        })
       })
 
-      it('should throw when item is invalid', () => {
-        expect(() => fixture.addItemToShoppingCart('1', {...itemData, name: 'invalid name'})).toThrow()
+      describe('when the item is invalid', () => {
+        it('should throw', () => {
+          expect(() => fixture.addItemToShoppingCart(id, {...itemData, name: 'invalid name'})).toThrow()
+        })
+
+        it('should not apply changes', () => {
+          try {
+            fixture.addItemToShoppingCart(id, {...itemData, name: 'invalid name'})
+          } catch (_) {
+          }
+          expect(itemsReadModel.getItems(id)).toEqual([])
+          expect(emptyReadModel.isEmpty(id)).toBe(true)
+        })
       })
-      it('should throw when ShoppingCart is unknown', () => {
-        expect(() => fixture.addItemToShoppingCart('unknown', {...itemData, name: 'invalid name'})).toThrow()
+
+      describe('when the cart is unknown', () => {
+        it('should throw', () => {
+          expect(() => fixture.addItemToShoppingCart('unknown', {...itemData, name: 'invalid name'})).toThrow()
+        })
+        it('should not apply changes', () => {
+          try {
+            fixture.addItemToShoppingCart('unknown', {...itemData, name: 'invalid name'})
+          } catch (_) {
+          }
+          expect(itemsReadModel.getItems(id)).toEqual([])
+          expect(emptyReadModel.isEmpty(id)).toBe(true)
+        })
       })
     })
   })
 
   describe('when a loaded ShoppingCart exists', () => {
-    beforeEach(()=>{
+    beforeEach(() => {
       const cart = ShoppingCart.restore('1', [ITEM])
       repository.create(cart)
       const cartData: ShoppingCartData = toData(cart)
@@ -103,17 +141,19 @@ describe('ShoppingCartFixture', () => {
       emptyReadModel.notifyItemAdded(cartData)
     })
 
-    it('should return the ShoppingCart\'s items', () => {
-      expect(fixture.getShoppingCartItems('1')).toEqual([ITEM])
-    })
-
-    it('should throw when querying unknown ShoppingCart items', () => {
-      expect(() => fixture.getShoppingCartItems('unknown')).toThrow()
-    })
-
-    it('should check out the ShoppingCart', () => {
-      fixture.checkOut('1')
-      expect(checkoutService.checkOut).toHaveBeenCalledWith(jasmine.arrayContaining([toData(ITEM)]))
+    describe('and the cart is checked out', () => {
+      beforeEach(() => {
+        fixture.checkOut('1')
+      })
+      it('should forward to checkout service', () => {
+        expect(checkoutService.checkOut).toHaveBeenCalledWith(jasmine.arrayContaining([toData(ITEM)]))
+      })
+      it('should not consider the cart empty', () => {
+        expect(emptyReadModel.isEmpty('1')).toBe(false)
+      })
+      it('should throw when querying items', () => {
+        expect(() => itemsReadModel.getItems('1')).toThrow()
+      })
     })
 
     it('should throw when trying to check out unknown ShoppingCart', () => {
@@ -121,9 +161,19 @@ describe('ShoppingCartFixture', () => {
       expect(checkoutService.checkOut).not.toHaveBeenCalled()
     })
 
-    it('should remove an existing item', () => {
-      fixture.removeItemFromShoppingCart('1', toData(ITEM))
-      expect(fixture.isShoppingCartEmpty('1')).toBe(true)
+
+    describe('and removing the only existing item', () => {
+      beforeEach(() => {
+        fixture.removeItemFromShoppingCart('1', toData(ITEM))
+      })
+
+      it('should be empty', () => {
+        expect(emptyReadModel.isEmpty('1')).toBe(true)
+      })
+
+      it('should return no items', () => {
+        expect(itemsReadModel.getItems('1')).toEqual([])
+      })
     })
 
     it('should ignore when trying to remove a non-existing item', () => {

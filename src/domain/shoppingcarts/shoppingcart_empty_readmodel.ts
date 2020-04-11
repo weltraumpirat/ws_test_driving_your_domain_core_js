@@ -17,12 +17,12 @@ export class ShoppingCartEmptyReadModel {
   }
 
   public notifyItemAdded(data: ShoppingCartData): void {
-    this.carts.add(data.id)
+    this.carts.delete(data.id)
   }
 
   public notifyItemRemoved(data: ShoppingCartData): void {
-    if (data.items.length > 0) {
-      this.carts.delete(data.id)
+    if (data.items.length == 0) {
+      this.carts.add(data.id)
     }
   }
 
