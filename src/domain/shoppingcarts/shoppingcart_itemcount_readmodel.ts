@@ -4,7 +4,7 @@ import {
 } from '../../types'
 import {ShoppingCartData} from './shoppingcart_fixture'
 
-export class ShoppingCartItemsReadModel {
+export class ShoppingCartItemCountReadModel {
   public readonly carts: Map<UUID, number>
 
   public constructor() {
