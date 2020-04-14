@@ -29,7 +29,6 @@ export class CheckoutService {
 
   public constructor(ordersApi: OrdersApi) {
     this._ordersApi = ordersApi
-
   }
 
   public checkOut(items: ShoppingCartItemData[]): void {
