@@ -2,7 +2,10 @@ import {
   ShoppingCart,
   ShoppingCartRepository
 } from '../domain/shoppingcarts/shoppingcart'
-import {ensure} from '../types'
+import {
+  ensure,
+  UUID
+} from '../types'
 
 export class ShoppingCartRepositoryInMemory implements ShoppingCartRepository {
   private _shoppingCarts: Map<string, ShoppingCart>
@@ -12,8 +15,12 @@ export class ShoppingCartRepositoryInMemory implements ShoppingCartRepository {
     carts?.forEach(cart => this._shoppingCarts.set(cart.id, cart))
   }
 
-  public findById(id: string): ShoppingCart {
-    return ensure(this._shoppingCarts.get(id), `ShoppingCart with id:${id} does not exist.`)
+  public findById(id: string): ShoppingCart | undefined {
+    return this._shoppingCarts.get(id)
+  }
+
+  public getById(id: UUID): ShoppingCart {
+    return ensure(this.findById(id), `ShoppingCart with id:${id} does not exist.`)
   }
 
   public create(cart: ShoppingCart): void {
@@ -22,5 +29,9 @@ export class ShoppingCartRepositoryInMemory implements ShoppingCartRepository {
 
   public update(cart: ShoppingCart): void {
     this._shoppingCarts.set(cart.id, cart)
+  }
+
+  public delete(id: UUID): void {
+    this._shoppingCarts.delete(id)
   }
 }

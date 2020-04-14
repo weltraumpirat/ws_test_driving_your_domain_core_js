@@ -32,7 +32,7 @@ export class ShoppingCartItem {
     this.packagingType = packagingType
     this.name = name
     this.id = id
-    this.label =  `${this.name}, ${this.amount} ${this.packagingType}`
+    this.label = `${this.name}, ${this.amount} ${this.packagingType}`
   }
 
   public static create(
@@ -52,7 +52,7 @@ export class ShoppingCartItem {
     return new ShoppingCartItem(id, name, packagingType, amount, price)
   }
 
-  public static fromData( data: ShoppingCartItemData): ShoppingCartItem {
+  public static fromData(data: ShoppingCartItemData): ShoppingCartItem {
     return ShoppingCartItem.restore(data.id, data.name, data.packagingType, data.amount, data.price)
   }
 }
@@ -74,9 +74,11 @@ export class ShoppingCart extends Aggregate {
   }
 
   public removeItem(item: ShoppingCartItem): void {
-    this.items = this.items.filter((i: ShoppingCartItem): boolean => i.id !== item.id)
-    const cartData: ShoppingCartData = toData(this)
-    this._eventbus.dispatch({type: SHOPPING_CART_ITEM_REMOVED, payload: cartData})
+    if (this.items.some((i: ShoppingCartItem): boolean => i.id === item.id)) {
+      this.items = this.items.filter((i: ShoppingCartItem): boolean => i.id !== item.id)
+      const cartData: ShoppingCartData = toData(this)
+      this._eventbus.dispatch({type: SHOPPING_CART_ITEM_REMOVED, payload: cartData})
+    }
   }
 
 
@@ -89,7 +91,7 @@ export class ShoppingCart extends Aggregate {
   }
 
   public static createWithItems(...items: ShoppingCartItem[]): ShoppingCart {
-    return new ShoppingCart(uuid(),[...items])
+    return new ShoppingCart(uuid(), [...items])
   }
 
   public static restore(id: UUID, items: ShoppingCartItem[] = []): ShoppingCart {
@@ -104,9 +106,13 @@ export class ShoppingCart extends Aggregate {
 }
 
 export interface ShoppingCartRepository {
-  findById(id: string): ShoppingCart
+  findById(id: UUID): ShoppingCart | undefined
+
+  getById(id: UUID): ShoppingCart
 
   create(cart: ShoppingCart): void
 
   update(cart: ShoppingCart): void
+
+  delete(id: UUID): void
 }

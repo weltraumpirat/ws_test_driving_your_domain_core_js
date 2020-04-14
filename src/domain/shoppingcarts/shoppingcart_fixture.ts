@@ -62,19 +62,20 @@ export class ShoppingCartFixture extends AggregateFixture {
   public addItemToShoppingCart(cartId: UUID, itemData: ShoppingCartItemData): void {
     const item = ShoppingCartItem.fromData(itemData)
     validateShoppingCartItem(item, this._productsReadModel.products)
-    const cart = this._shoppingCartRepository.findById(cartId)
+    const cart = this._shoppingCartRepository.getById(cartId)
     cart.addItem(item)
     this._shoppingCartRepository.update(cart)
   }
 
   public removeItemFromShoppingCart(cartId: UUID, item: ShoppingCartItemData): void {
-    const cart = this._shoppingCartRepository.findById(cartId)
+    const cart = this._shoppingCartRepository.getById(cartId)
     cart.removeItem(ShoppingCartItem.fromData(item))
     this._shoppingCartRepository.update(cart)
   }
 
   public checkOut(id: UUID): void {
-    const cart = this._shoppingCartRepository.findById(id)
+    const cart = this._shoppingCartRepository.getById(id)
     cart.checkOut()
+    this._shoppingCartRepository.delete(id)
   }
 }
