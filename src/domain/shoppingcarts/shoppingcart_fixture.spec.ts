@@ -61,7 +61,7 @@ describe('ShoppingCartFixture', () => {
     emptyReadModel = new ShoppingCartEmptyReadModel()
     checkoutService = new CheckoutService(new OrdersApi(new OrdersReadModel()))
     itemCountReadModel = new ShoppingCartItemCountReadModel()
-    fixture = new ShoppingCartFixture(repository, itemsReadModel, itemCountReadModel, emptyReadModel, productsReadModel, checkoutService)
+    fixture = new ShoppingCartFixture(repository, productsReadModel, checkoutService)
   })
   describe('when creating an empty Shopping Cart', () => {
     let id: UUID
@@ -169,10 +169,6 @@ describe('ShoppingCartFixture', () => {
       const cart = ShoppingCart.restore('1', [ITEM])
       repository.create(cart)
       const cartData: ShoppingCartData = toData(cart)
-      itemsReadModel.notifyCartCreated(cartData)
-      itemsReadModel.notifyItemAdded(cartData)
-      itemCountReadModel.notifyCartCreated(cartData)
-      itemCountReadModel.notifyItemAdded(cartData)
       Global.eventbus.dispatch({type: SHOPPING_CART_CREATED, payload: cartData})
       Global.eventbus.dispatch({type: SHOPPING_CART_ITEM_ADDED, payload: cartData})
     })

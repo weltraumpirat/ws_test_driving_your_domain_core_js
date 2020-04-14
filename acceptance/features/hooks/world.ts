@@ -53,7 +53,7 @@ class World {
     this.shoppingCartItemsReadModel = new ShoppingCartItemsReadModel()
     this.shoppingCartItemCountReadModel = new ShoppingCartItemCountReadModel()
     this.shoppingCartEmptyReadModel = new ShoppingCartEmptyReadModel()
-    this.shoppingCartFixture = new ShoppingCartFixture(this.shoppingCartRepository, this.shoppingCartItemsReadModel, this.shoppingCartItemCountReadModel, this.shoppingCartEmptyReadModel, this.productsReadModel, this.checkoutService)
+    this.shoppingCartFixture = new ShoppingCartFixture(this.shoppingCartRepository, this.productsReadModel, this.checkoutService)
     this.shoppingCartApi = new ShoppingCartsApi(this.shoppingCartFixture, this.shoppingCartItemsReadModel, this.shoppingCartItemCountReadModel, this.shoppingCartEmptyReadModel)
   }
 }

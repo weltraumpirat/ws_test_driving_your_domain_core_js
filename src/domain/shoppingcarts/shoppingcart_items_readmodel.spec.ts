@@ -3,6 +3,13 @@ import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
 import {toData} from '../../conversion'
 import {ShoppingCartItem} from './shoppingcart'
 import {PackagingType} from '../products/product'
+import {Global} from '../../global'
+import {
+  SHOPPING_CART_CHECKED_OUT,
+  SHOPPING_CART_CREATED,
+  SHOPPING_CART_ITEM_ADDED,
+  SHOPPING_CART_ITEM_REMOVED
+} from './shoppingcart_messages'
 
 const ITEM = ShoppingCartItem.fromData(
   {
@@ -21,7 +28,7 @@ describe('ShoppingCartItemsReadModel', () => {
   })
   describe('when creating an empty Shopping Cart', () => {
     beforeEach(() => {
-      readModel.notifyCartCreated({id: ID, items: []})
+      Global.eventbus.dispatch({type: SHOPPING_CART_CREATED, payload: {id: ID, items: []}})
     })
 
     it('should return no items for the cart', () => {
@@ -36,14 +43,14 @@ describe('ShoppingCartItemsReadModel', () => {
       let itemData: ShoppingCartItemData
       beforeEach(() => {
         itemData = toData(ITEM)
-        readModel.notifyItemAdded({id: ID, items: [itemData]})
+        Global.eventbus.dispatch({type: SHOPPING_CART_ITEM_ADDED, payload: {id: ID, items: [itemData]}})
       })
       it('should store the item', () => {
         expect(readModel.getItems(ID)).toEqual([itemData])
       })
       describe('and the existing item is removed', () => {
         beforeEach(() => {
-          readModel.notifyItemRemoved({id: ID, items: []})
+          Global.eventbus.dispatch({type: SHOPPING_CART_ITEM_REMOVED, payload: {id: ID, items: []}})
         })
 
         it('should return no items', () => {
@@ -52,7 +59,7 @@ describe('ShoppingCartItemsReadModel', () => {
       })
       describe('and the cart is checked out', () => {
         beforeEach(() => {
-          readModel.notifyCheckedOut({id: ID, items: [itemData]})
+          Global.eventbus.dispatch({type: SHOPPING_CART_CHECKED_OUT, payload: {id: ID, items: [itemData]}})
         })
         it('should throw when querying items', () => {
           expect(() => readModel.getItems(ID)).toThrow()
