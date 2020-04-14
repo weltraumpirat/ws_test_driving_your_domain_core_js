@@ -1,10 +1,6 @@
 import {setWorldConstructor} from 'cucumber'
-import {
-  ShoppingCartsApi
-} from '../../../src/api/shoppingcarts_api'
-import {
-  ProductsApi
-} from '../../../src/api/products_api'
+import {ShoppingCartsApi} from '../../../src/api/shoppingcarts_api'
+import {ProductsApi} from '../../../src/api/products_api'
 import {UUID} from '../../../src/types'
 import {CheckoutService} from '../../../src/domain/checkout/checkoutservice'
 import {ShoppingCartRepositoryInMemory} from '../../../src/persistence/shoppingcart_repository'
@@ -15,13 +11,12 @@ import {
   ProductFixture,
   ProductRepository
 } from '../../../src/domain/products/product_fixture'
-import {
-  OrdersApi
-} from '../../../src/api/orders_api'
+import {OrdersApi} from '../../../src/api/orders_api'
 import {ProductsReadModel} from '../../../src/domain/products/products_readmodel'
 import {ShoppingCartItemsReadModel} from '../../../src/domain/shoppingcarts/shoppingcart_items_readmodel'
 import {OrdersReadModel} from '../../../src/domain/orders/orders_readmodel'
 import {ShoppingCartEmptyReadModel} from '../../../src/domain/shoppingcarts/shoppingcart_empty_readmodel'
+import {ShoppingCartItemCountReadModel} from '../../../src/domain/shoppingcarts/shoppingcart_itemcount_readmodel'
 
 class World {
   public productsApi: ProductsApi
@@ -32,6 +27,8 @@ class World {
   public shoppingCartApi: ShoppingCartsApi
   public shoppingCartRepository: ShoppingCartRepository
   public shoppingCartItemsReadModel: ShoppingCartItemsReadModel
+  private shoppingCartItemCountReadModel: ShoppingCartItemCountReadModel
+  private shoppingCartEmptyReadModel: ShoppingCartEmptyReadModel
   public checkoutService: CheckoutService
   public ordersApi: OrdersApi
   public ordersReadModel: OrdersReadModel
@@ -39,8 +36,6 @@ class World {
   // noinspection JSUnusedGlobalSymbols
   public cartId?: UUID
 
-
-  private shoppingCartEmptyReadModel: ShoppingCartEmptyReadModel
 
   public constructor() {
 
@@ -51,11 +46,12 @@ class World {
 
     this.shoppingCartRepository = new ShoppingCartRepositoryInMemory()
     this.shoppingCartItemsReadModel = new ShoppingCartItemsReadModel()
+    this.shoppingCartItemCountReadModel = new ShoppingCartItemCountReadModel()
     this.shoppingCartEmptyReadModel = new ShoppingCartEmptyReadModel()
     this.ordersReadModel = new OrdersReadModel()
     this.ordersApi = new OrdersApi(this.ordersReadModel)
     this.checkoutService = new CheckoutService(this.ordersApi)
-    this.shoppingCartFixture = new ShoppingCartFixture(this.shoppingCartRepository, this.shoppingCartItemsReadModel, this.shoppingCartEmptyReadModel, this.productsReadModel, this.checkoutService)
+    this.shoppingCartFixture = new ShoppingCartFixture(this.shoppingCartRepository, this.shoppingCartItemsReadModel, this.shoppingCartItemCountReadModel, this.shoppingCartEmptyReadModel, this.productsReadModel, this.checkoutService)
     this.shoppingCartApi = new ShoppingCartsApi(this.shoppingCartFixture)
   }
 }

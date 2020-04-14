@@ -18,6 +18,7 @@ import {ShoppingCartItemsReadModel} from './shoppingcart_items_readmodel'
 import {OrdersReadModel} from '../orders/orders_readmodel'
 import {ShoppingCartEmptyReadModel} from './shoppingcart_empty_readmodel'
 import {UUID} from '../../types'
+import {ShoppingCartItemCountReadModel} from './shoppingcart_itemcount_readmodel'
 
 
 jest.mock('../../api/products_api')
@@ -38,6 +39,7 @@ describe('ShoppingCartFixture', () => {
   let productsReadModel: ProductsReadModel
   let repository: ShoppingCartRepositoryInMemory
   let itemsReadModel: ShoppingCartItemsReadModel
+  let itemCountReadModel: ShoppingCartItemCountReadModel
   let emptyReadModel: ShoppingCartEmptyReadModel
   let checkoutService: CheckoutService
   beforeEach(() => {
@@ -46,7 +48,8 @@ describe('ShoppingCartFixture', () => {
     itemsReadModel = new ShoppingCartItemsReadModel()
     emptyReadModel = new ShoppingCartEmptyReadModel()
     checkoutService = new CheckoutService(new OrdersApi(new OrdersReadModel()))
-    fixture = new ShoppingCartFixture(repository, itemsReadModel, emptyReadModel, productsReadModel, checkoutService)
+    itemCountReadModel = new ShoppingCartItemCountReadModel()
+    fixture = new ShoppingCartFixture(repository, itemsReadModel, itemCountReadModel, emptyReadModel, productsReadModel, checkoutService)
   })
   describe('when creating an empty Shopping Cart', () => {
     let id: UUID
@@ -74,6 +77,10 @@ describe('ShoppingCartFixture', () => {
       expect(itemsReadModel.getItems(id)).toEqual([])
     })
 
+    it('should return count of 0 items for the cart', () => {
+      expect(itemCountReadModel.getItemCount(id)).toEqual(0)
+    })
+
     it('should throw when querying unknown ShoppingCart items', () => {
       expect(() => fixture.getShoppingCartItems('unknown')).toThrow()
     })
@@ -94,6 +101,10 @@ describe('ShoppingCartFixture', () => {
         it('should store the item', () => {
           expect(itemsReadModel.getItems(id)).toEqual([itemData])
         })
+
+        it('should return item count of 1', () => {
+          expect(itemCountReadModel.getItemCount(id)).toEqual(1)
+        })
         it('should no longer consider the cart empty', () => {
           expect(emptyReadModel.isEmpty(id)).toBe(false)
         })
@@ -110,6 +121,7 @@ describe('ShoppingCartFixture', () => {
           } catch (_) {
           }
           expect(itemsReadModel.getItems(id)).toEqual([])
+          expect(itemCountReadModel.getItemCount(id)).toEqual(0)
           expect(emptyReadModel.isEmpty(id)).toBe(true)
         })
       })
@@ -124,6 +136,7 @@ describe('ShoppingCartFixture', () => {
           } catch (_) {
           }
           expect(itemsReadModel.getItems(id)).toEqual([])
+          expect(itemCountReadModel.getItemCount(id)).toEqual(0)
           expect(emptyReadModel.isEmpty(id)).toBe(true)
         })
       })
@@ -137,6 +150,8 @@ describe('ShoppingCartFixture', () => {
       const cartData: ShoppingCartData = toData(cart)
       itemsReadModel.notifyCartCreated(cartData)
       itemsReadModel.notifyItemAdded(cartData)
+      itemCountReadModel.notifyCartCreated(cartData)
+      itemCountReadModel.notifyItemAdded(cartData)
       emptyReadModel.notifyCartCreated(cartData)
       emptyReadModel.notifyItemAdded(cartData)
     })
@@ -153,6 +168,9 @@ describe('ShoppingCartFixture', () => {
       })
       it('should throw when querying items', () => {
         expect(() => itemsReadModel.getItems('1')).toThrow()
+      })
+      it('should throw when querying item count', () => {
+        expect(() => itemCountReadModel.getItemCount('1')).toThrow()
       })
     })
 
@@ -173,6 +191,9 @@ describe('ShoppingCartFixture', () => {
 
       it('should return no items', () => {
         expect(itemsReadModel.getItems('1')).toEqual([])
+      })
+      it('should return item count 0', () => {
+        expect(itemCountReadModel.getItemCount('1')).toEqual(0)
       })
     })
 

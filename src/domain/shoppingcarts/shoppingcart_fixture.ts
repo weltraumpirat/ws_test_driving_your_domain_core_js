@@ -12,6 +12,7 @@ import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
 import {ProductsReadModel} from '../products/products_readmodel'
 import {ShoppingCartItemsReadModel} from './shoppingcart_items_readmodel'
 import {ShoppingCartEmptyReadModel} from './shoppingcart_empty_readmodel'
+import {ShoppingCartItemCountReadModel} from './shoppingcart_itemcount_readmodel'
 
 export interface ShoppingCartData {
   id: UUID
@@ -30,11 +31,13 @@ export class ShoppingCartFixture {
   private _shoppingCartEmptyReadModel: ShoppingCartEmptyReadModel
   private _checkoutService: CheckoutService
   private _productsReadModel: ProductsReadModel
+  private _shoppingCartItemCountReadModel: ShoppingCartItemCountReadModel
 
 
-  public constructor(repository: ShoppingCartRepository, itemsReadModel: ShoppingCartItemsReadModel, emptyReadModel: ShoppingCartEmptyReadModel, productsReadModel: ProductsReadModel, checkoutService: CheckoutService) {
+  public constructor(repository: ShoppingCartRepository, itemsReadModel: ShoppingCartItemsReadModel, itemCountReadModel: ShoppingCartItemCountReadModel, emptyReadModel: ShoppingCartEmptyReadModel, productsReadModel: ProductsReadModel, checkoutService: CheckoutService) {
     this._shoppingCartRepository = repository
     this._shoppingCartItemsReadModel = itemsReadModel
+    this._shoppingCartItemCountReadModel = itemCountReadModel
     this._shoppingCartEmptyReadModel = emptyReadModel
     this._productsReadModel = productsReadModel
     this._checkoutService = checkoutService
@@ -45,6 +48,7 @@ export class ShoppingCartFixture {
     this._shoppingCartRepository.create(cart)
     const data: ShoppingCartData = toData(cart)
     this._shoppingCartItemsReadModel.notifyCartCreated(data)
+    this._shoppingCartItemCountReadModel.notifyCartCreated(data)
     this._shoppingCartEmptyReadModel.notifyCartCreated(data)
     return cart.id
   }
@@ -57,6 +61,7 @@ export class ShoppingCartFixture {
     this._shoppingCartRepository.update(cart)
     const cartData: ShoppingCartData = toData(cart)
     this._shoppingCartItemsReadModel.notifyItemAdded(cartData)
+    this._shoppingCartItemCountReadModel.notifyItemAdded(cartData)
     this._shoppingCartEmptyReadModel.notifyItemAdded(cartData)
   }
 
@@ -66,6 +71,7 @@ export class ShoppingCartFixture {
     this._shoppingCartRepository.update(cart)
     const cartData: ShoppingCartData = toData(cart)
     this._shoppingCartItemsReadModel.notifyItemRemoved(cartData)
+    this._shoppingCartItemCountReadModel.notifyItemRemoved(cartData)
     this._shoppingCartEmptyReadModel.notifyItemRemoved(cartData)
   }
 
@@ -75,6 +81,7 @@ export class ShoppingCartFixture {
     this._checkoutService.checkOut(items)
     const cartData: ShoppingCartData = toData(cart)
     this._shoppingCartItemsReadModel.notifyCheckedOut(cartData)
+    this._shoppingCartItemCountReadModel.notifyCheckedOut(cartData)
     this._shoppingCartEmptyReadModel.notifyCheckedOut(cartData)
   }
 
@@ -84,5 +91,9 @@ export class ShoppingCartFixture {
 
   public getShoppingCartItems(id: UUID): ShoppingCartItemData[] {
     return this._shoppingCartItemsReadModel.getItems(id)
+  }
+
+  public getShoppingCartItemCount(id: UUID): number {
+    return this._shoppingCartItemCountReadModel.getItemCount(id)
   }
 }

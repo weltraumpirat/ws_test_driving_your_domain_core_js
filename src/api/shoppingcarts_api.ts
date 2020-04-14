@@ -41,7 +41,7 @@ export class ShoppingCartsApi {
   }
 
   public getShoppingCartItemCount(id: string): number {
-    return this.getShoppingCartItems(id).length
+    return this._fixture.getShoppingCartItemCount(id)
   }
 
   public isShoppingCartEmpty(id: string): boolean {
