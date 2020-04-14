@@ -16,12 +16,12 @@ import {
 Given(/^the following available products:$/, function (table: TableDefinition) {
   this.productsApi.createCatalogWithProducts(tableRowsToProducts(table))
 })
-Given(/^the empty shopping cart$/, function () {
-  this.cartId = this.shoppingCartApi.createEmptyShoppingCart()
+Given(/^the empty shopping cart$/, async function () {
+  this.cartId = await this.shoppingCartApi.createEmptyShoppingCart()
 })
-Given(/^the shopping cart contains the following items:$/, function (table: TableDefinition) {
+Given(/^the shopping cart contains the following items:$/, async function (table: TableDefinition) {
   const items = tableRowsToItems(table)
-  this.cartId = this.shoppingCartApi.createShoppingCartWithItems(...items)
+  this.cartId = await this.shoppingCartApi.createShoppingCartWithItems(...items)
 })
 When(/^I add the following item:$/, function (table: TableDefinition) {
   const item = tableRowsToItems(table)[0]

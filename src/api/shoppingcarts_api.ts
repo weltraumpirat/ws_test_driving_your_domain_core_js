@@ -2,6 +2,12 @@ import {ShoppingCartFixture} from '../domain/shoppingcarts/shoppingcart_fixture'
 import {ShoppingCartItemsReadModel} from '../domain/shoppingcarts/shoppingcart_items_readmodel'
 import {ShoppingCartItemCountReadModel} from '../domain/shoppingcarts/shoppingcart_itemcount_readmodel'
 import {ShoppingCartEmptyReadModel} from '../domain/shoppingcarts/shoppingcart_empty_readmodel'
+import {UUID} from '../types'
+import {
+  CREATE_SHOPPING_CART,
+  SHOPPING_CART_CREATED
+} from '../domain/shoppingcarts/shoppingcart_messages'
+import {Global} from '../global'
 
 export interface ShoppingCartItemData {
   id: string
@@ -25,12 +31,15 @@ export class ShoppingCartsApi {
     this._shoppingCartEmptyReadModel = emptyReadModel
   }
 
-  public createEmptyShoppingCart(): string {
-    return this._fixture.createShoppingCart([])
+  public createEmptyShoppingCart(): Promise<UUID> {
+    return this.createShoppingCartWithItems()
   }
 
-  public createShoppingCartWithItems(...items: ShoppingCartItemData[]): string {
-    return this._fixture.createShoppingCart(items)
+  public createShoppingCartWithItems(...items: ShoppingCartItemData[]): Promise<UUID> {
+    return new Promise<UUID>(resolve => {
+      Global.eventbus.subscribeOnce(SHOPPING_CART_CREATED, ev => resolve(ev.payload.id))
+      Global.eventbus.dispatch({type: CREATE_SHOPPING_CART, payload: items})
+    })
   }
 
   public addItemToShoppingCart(cartId: string, data: ShoppingCartItemData): void {

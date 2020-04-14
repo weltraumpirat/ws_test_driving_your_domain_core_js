@@ -19,6 +19,12 @@ import {ShoppingCartEmptyReadModel} from './shoppingcart_empty_readmodel'
 import {UUID} from '../../types'
 import {ShoppingCartItemCountReadModel} from './shoppingcart_itemcount_readmodel'
 import {PRODUCT_CREATED} from '../products/product_messages'
+import {
+  CREATE_SHOPPING_CART,
+  SHOPPING_CART_CREATED,
+  SHOPPING_CART_ITEM_ADDED
+} from './shoppingcart_messages'
+import {Global} from '../../global'
 
 
 jest.mock('../../api/products_api')
@@ -34,6 +40,7 @@ const ITEM = ShoppingCartItem.fromData(
     price: '1.19 EUR'
   }
 )
+const eventbus = Global.eventbus
 describe('ShoppingCartFixture', () => {
   let fixture: ShoppingCartFixture
   let productsReadModel: ProductsReadModel
@@ -53,8 +60,12 @@ describe('ShoppingCartFixture', () => {
   })
   describe('when creating an empty Shopping Cart', () => {
     let id: UUID
-    beforeEach(() => {
-      id = fixture.createShoppingCart([])
+    beforeEach(async () => {
+      id = await new Promise<UUID>(resolve => {
+        eventbus.subscribeOnce(SHOPPING_CART_CREATED, ev =>
+          resolve(ev.payload.id))
+        eventbus.dispatch({type: CREATE_SHOPPING_CART, payload: []})
+      })
     })
 
     it('should return the cart\'s ID', () => {
@@ -144,8 +155,8 @@ describe('ShoppingCartFixture', () => {
       itemsReadModel.notifyItemAdded(cartData)
       itemCountReadModel.notifyCartCreated(cartData)
       itemCountReadModel.notifyItemAdded(cartData)
-      emptyReadModel.notifyCartCreated(cartData)
-      emptyReadModel.notifyItemAdded(cartData)
+      Global.eventbus.dispatch({type: SHOPPING_CART_CREATED, payload: cartData})
+      Global.eventbus.dispatch({type: SHOPPING_CART_ITEM_ADDED, payload: cartData})
     })
 
     describe('and the cart is checked out', () => {
@@ -199,5 +210,8 @@ describe('ShoppingCartFixture', () => {
     it('should throw when trying to remove an item from an unknown ShoppingCart', () => {
       expect(() => fixture.removeItemFromShoppingCart('unknown', toData(ITEM))).toThrow()
     })
+  })
+  afterEach(()=>{
+    eventbus.release()
   })
 })

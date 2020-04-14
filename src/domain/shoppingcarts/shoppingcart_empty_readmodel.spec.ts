@@ -2,7 +2,16 @@ import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
 import {toData} from '../../conversion'
 import {ShoppingCartItem} from './shoppingcart'
 import {PackagingType} from '../products/product'
-import {ShoppingCartEmptyReadModel} from './shoppingcart_empty_readmodel'
+import {
+  ShoppingCartEmptyReadModel
+} from './shoppingcart_empty_readmodel'
+import {Global} from '../../global'
+import {
+  SHOPPING_CART_CHECKED_OUT,
+  SHOPPING_CART_CREATED,
+  SHOPPING_CART_ITEM_ADDED,
+  SHOPPING_CART_ITEM_REMOVED
+} from './shoppingcart_messages'
 
 const ITEM = ShoppingCartItem.fromData(
   {
@@ -21,7 +30,7 @@ describe('ShoppingCartEmptyReadModel', () => {
   })
   describe('when creating an empty Shopping Cart', () => {
     beforeEach(() => {
-      readModel.notifyCartCreated({id: ID, items: []})
+      Global.eventbus.dispatch({type: SHOPPING_CART_CREATED, payload: {id: ID, items: []}})
     })
 
     it('should consider the cart empty', () => {
@@ -37,7 +46,7 @@ describe('ShoppingCartEmptyReadModel', () => {
 
       beforeEach(() => {
         itemData = toData(ITEM)
-        readModel.notifyItemAdded({id: ID, items: [itemData]})
+        Global.eventbus.dispatch({type: SHOPPING_CART_ITEM_ADDED, payload: {id: ID, items: [itemData]}})
       })
 
       it('not consider the cart empty', () => {
@@ -46,7 +55,7 @@ describe('ShoppingCartEmptyReadModel', () => {
 
       describe('and the last existing item is removed', () => {
         beforeEach(() => {
-          readModel.notifyItemRemoved({id: ID, items: []})
+          Global.eventbus.dispatch({type: SHOPPING_CART_ITEM_REMOVED, payload: {id: ID, items: []}})
         })
 
         it('should consider the cart empty', () => {
@@ -56,7 +65,7 @@ describe('ShoppingCartEmptyReadModel', () => {
 
       describe('and the cart is checked out', () => {
         beforeEach(() => {
-          readModel.notifyCheckedOut({id: ID, items: [itemData]})
+          Global.eventbus.dispatch({type: SHOPPING_CART_CHECKED_OUT, payload: {id: ID, items: [itemData]}})
         })
 
         it('should not consider the cart empty', () => {
