@@ -1,9 +1,8 @@
-import {
-  Order,
-  OrderPosition
-} from '../orders/order'
 import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
-import {OrdersApi} from '../../api/orders_api'
+import {
+  OrderPositionData,
+  OrdersApi
+} from '../../api/orders_api'
 
 
 type ItemEntry = Map<string, { count: number, price: string }>
@@ -35,12 +34,12 @@ export class CheckoutService {
 
   public checkOut(items: ShoppingCartItemData[]): void {
     const itemCounts = countItems(items)
-    const positions: OrderPosition[] = []
+    const positions: OrderPositionData[] = []
     itemCounts.forEach((value, key) => {
       const combined = value.count * parseFloat(value.price)
-      positions.push(OrderPosition.create(key, value.count, value.price, combined + ' EUR'))
+      positions.push({itemName: key, count: value.count, singlePrice: value.price, combinedPrice: combined + ' EUR'})
     })
-    this._ordersApi.create(Order.create(...positions))
+    this._ordersApi.create({positions})
   }
 }
 

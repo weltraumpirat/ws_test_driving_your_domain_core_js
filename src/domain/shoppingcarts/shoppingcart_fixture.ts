@@ -6,7 +6,6 @@ import {
 import {CheckoutService} from '../checkout/checkoutservice'
 import {UUID} from '../../types'
 import {validateShoppingCartItem} from '../../validation'
-import {OrderPosition} from '../orders/order'
 import {toData} from '../../conversion'
 import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
 import {ProductsReadModel} from '../products/products_readmodel'
@@ -17,12 +16,6 @@ import {ShoppingCartItemCountReadModel} from './shoppingcart_itemcount_readmodel
 export interface ShoppingCartData {
   id: UUID
   items: ShoppingCartItemData[]
-}
-
-export interface OrderData {
-  id: UUID
-  positions: OrderPosition[]
-  total: string
 }
 
 export class ShoppingCartFixture {

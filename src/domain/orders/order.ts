@@ -2,6 +2,9 @@
 import uuid from 'uuid/v4'
 import {Aggregate} from '../aggregate'
 import {Global} from '../../global'
+import {toData} from '../../conversion'
+import {ORDER_CREATED} from './order_messages'
+import {OrderPositionData} from '../../api/orders_api'
 
 export class OrderPosition {
   public readonly id: string
@@ -39,6 +42,11 @@ export class OrderPosition {
     combinedPrice: string): OrderPosition {
     return new OrderPosition(id, itemName, count, singlePrice, combinedPrice)
   }
+
+  public static fromData(
+    data: OrderPositionData): OrderPosition {
+    return new OrderPosition(data.id || uuid(), data.itemName, data.count, data.singlePrice, data.combinedPrice)
+  }
 }
 
 export class Order extends Aggregate {
@@ -47,6 +55,7 @@ export class Order extends Aggregate {
   public constructor(id: string, positions: OrderPosition[]) {
     super(id, Global.eventbus)
     this.positions = positions
+    this._eventbus.dispatch({type: ORDER_CREATED, payload: {...toData(this), total: this.total}})
   }
 
   public get total(): string {

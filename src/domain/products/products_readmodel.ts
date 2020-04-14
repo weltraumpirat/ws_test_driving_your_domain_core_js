@@ -7,18 +7,17 @@ import {
 import {PRODUCT_CREATED} from './product_messages'
 import {Global} from '../../global'
 
-export class ProductsReadModel implements ReadModel {
+export class ProductsReadModel extends ReadModel {
   public readonly products: ProductData[]
-  private _eventbus: Eventbus
 
   public constructor(eventbus: Eventbus = Global.eventbus) {
+    super(eventbus)
     this.products = []
-    this._eventbus = eventbus
     this._eventbus.subscribe(PRODUCT_CREATED, this.receiveEvent.bind(this))
   }
 
-  public receiveEvent(event: Event): void {
-    switch( event.type ) {
+  protected receiveEvent(event: Event): void {
+    switch (event.type) {
       case PRODUCT_CREATED:
         this.notifyProductCreated(event.payload)
         break

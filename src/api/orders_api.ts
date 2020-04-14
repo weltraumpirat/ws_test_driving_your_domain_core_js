@@ -1,6 +1,23 @@
-import {OrderData} from '../domain/shoppingcarts/shoppingcart_fixture'
-import {toData} from '../conversion'
 import {OrdersReadModel} from '../domain/orders/orders_readmodel'
+import {UUID} from '../types'
+import {
+  Order,
+  OrderPosition
+} from '../domain/orders/order'
+
+export interface OrderPositionData {
+  id?: string
+  itemName: string
+  count: number
+  singlePrice: string
+  combinedPrice: string
+}
+
+export interface OrderData {
+  id?: UUID
+  positions: OrderPositionData[]
+  total?: string
+}
 
 export class OrdersApi {
   private _readModel: OrdersReadModel
@@ -9,7 +26,8 @@ export class OrdersApi {
     this._readModel = readModel
   }
 
-  public create(order: OrderData): void {
-    this._readModel.notifyOrderCreated({...toData(order), total: order.total})
+  public create(data: OrderData): void {
+    const positions = data.positions.map(OrderPosition.fromData)
+    Order.create(...positions)
   }
 }

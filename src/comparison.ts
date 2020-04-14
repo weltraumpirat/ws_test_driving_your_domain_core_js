@@ -1,14 +1,16 @@
-import {OrderPosition} from './domain/orders/order'
 import {toData} from './conversion'
-import {OrderData} from './domain/shoppingcarts/shoppingcart_fixture'
+import {
+  OrderData,
+  OrderPositionData
+} from './api/orders_api'
 
-export function equalPositionIgnoringIds(one: OrderPosition, two: OrderPosition): boolean {
+export function equalPositionIgnoringIds(one: OrderPositionData, two: OrderPositionData): boolean {
   return one.itemName === two.itemName
     && one.count === two.count
     && one.singlePrice === two.singlePrice
 }
 
-export function equalPositions(one: OrderPosition[], two: OrderPosition[]): boolean {
+export function equalPositions(one: OrderPositionData[], two: OrderPositionData[]): boolean {
   for (let i = 0; i < one.length; i++) {
     if (!equalPositionIgnoringIds(one[i], two[i])) {
       return false
