@@ -3,7 +3,6 @@ import {
   ShoppingCartFixture
 } from './shoppingcart_fixture'
 import {ShoppingCartRepositoryInMemory} from '../../persistence/shoppingcart_repository'
-import {ProductData} from '../../api/products_api'
 import {CheckoutService} from '../checkout/checkoutservice'
 import {
   ShoppingCart,
@@ -19,6 +18,7 @@ import {OrdersReadModel} from '../orders/orders_readmodel'
 import {ShoppingCartEmptyReadModel} from './shoppingcart_empty_readmodel'
 import {UUID} from '../../types'
 import {ShoppingCartItemCountReadModel} from './shoppingcart_itemcount_readmodel'
+import {PRODUCT_CREATED} from '../products/product_messages'
 
 
 jest.mock('../../api/products_api')
@@ -83,7 +83,7 @@ describe('ShoppingCartFixture', () => {
         itemData = toData(ITEM)
         // @ts-ignore
         // noinspection JSConstantReassignment
-        productsReadModel.products = [itemData as ProductData]
+        productsReadModel.receiveEvent({type: PRODUCT_CREATED, payload: itemData})
       })
 
       describe('when the item is valid', () => {

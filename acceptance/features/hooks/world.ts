@@ -41,7 +41,7 @@ class World {
 
     this.productRepository = new ProductRepositoryInMemory()
     this.productsReadModel = new ProductsReadModel()
-    this.productFixture = new ProductFixture(this.productRepository, this.productsReadModel)
+    this.productFixture = new ProductFixture(this.productRepository)
     this.productsApi = new ProductsApi(this.productFixture, this.productsReadModel)
 
     this.ordersReadModel = new OrdersReadModel()

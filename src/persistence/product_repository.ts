@@ -1,5 +1,6 @@
 import {Product} from '../domain/products/product'
 import {ProductRepository} from '../domain/products/product_fixture'
+import {UUID} from '../types'
 
 export class ProductRepositoryInMemory implements ProductRepository {
   private _products: Map<string, Product>
@@ -10,6 +11,10 @@ export class ProductRepositoryInMemory implements ProductRepository {
 
   public findAll(): Product[] {
     return [...this._products.values()]
+  }
+
+  public findById(id: UUID): Product | undefined {
+    return this._products.get(id)
   }
 
   public create(product: Product): void {

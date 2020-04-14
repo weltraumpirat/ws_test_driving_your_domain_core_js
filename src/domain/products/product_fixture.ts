@@ -1,31 +1,36 @@
 import {Product} from './product'
 import {ProductData} from '../../api/products_api'
-import {toData} from '../../conversion'
-import {ProductsReadModel} from './products_readmodel'
 import {AggregateFixture} from '../aggregate'
-import {Command} from '../../eventbus'
+import {
+  Command,
+  Eventbus
+} from '../../eventbus'
 import {
   ADD_PRODUCT,
-  ADD_PRODUCTS,
-  PRODUCT_CREATED
+  ADD_PRODUCTS
 } from './product_messages'
+import {Global} from '../../global'
+import {UUID} from '../../types'
 
 export interface ProductRepository {
   findAll(): Product[]
 
+  findById(id: UUID): Product | undefined
+
   create(product: Product): void
 }
 
-export class ProductFixture implements AggregateFixture {
+export class ProductFixture extends AggregateFixture {
   private _repository: ProductRepository
-  private _productReadModel: ProductsReadModel
 
-  public constructor(repository: ProductRepository, productReadModel: ProductsReadModel) {
+  public constructor(repository: ProductRepository, eventbus: Eventbus = Global.eventbus) {
+    super(eventbus)
     this._repository = repository
-    this._productReadModel = productReadModel
+    this._eventbus.subscribe(ADD_PRODUCT, this.receiveCommand.bind(this))
+    this._eventbus.subscribe(ADD_PRODUCTS, this.receiveCommand.bind(this))
   }
 
-  public receiveCommand(command: Command): void {
+  protected receiveCommand(command: Command): void {
     switch (command.type) {
       case ADD_PRODUCTS:
         this.addProducts(command.payload)
@@ -36,13 +41,22 @@ export class ProductFixture implements AggregateFixture {
     }
   }
 
-  private addProduct(product: Product): void {
-    this._repository.create(product)
-    this._productReadModel.receiveEvent({type: PRODUCT_CREATED, payload: toData(product)})
+  private addProduct(data: ProductData): void {
+    let product: Product
+    if (!data.id) {
+      product = Product.create(data.name, data.packagingType, data.amount, data.price)
+    } else {
+      product = Product.fromData(data)
+    }
+    if (!this._repository.findById(product.id))
+      this.store(product)
   }
 
   private addProducts(data: ProductData[]): void {
-    const products = data.map(Product.fromData)
-    products.forEach(this.addProduct.bind(this))
+    data.map(this.addProduct.bind(this))
+  }
+
+  private store(product: Product): void {
+    this._repository.create(product)
   }
 }
