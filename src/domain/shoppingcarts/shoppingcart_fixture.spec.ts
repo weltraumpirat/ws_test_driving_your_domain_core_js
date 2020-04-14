@@ -33,7 +33,6 @@ import {Global} from '../../global'
 
 jest.mock('../../api/products_api')
 jest.mock('../../api/orders_api')
-jest.mock('../checkout/checkoutservice')
 
 const ITEM = ShoppingCartItem.fromData(
   {
@@ -53,15 +52,18 @@ describe('ShoppingCartFixture', () => {
   let itemsReadModel: ShoppingCartItemsReadModel
   let itemCountReadModel: ShoppingCartItemCountReadModel
   let emptyReadModel: ShoppingCartEmptyReadModel
+  let ordersApi: OrdersApi
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let checkoutService: CheckoutService
   beforeEach(() => {
     productsReadModel = new ProductsReadModel()
     repository = new ShoppingCartRepositoryInMemory()
     itemsReadModel = new ShoppingCartItemsReadModel()
     emptyReadModel = new ShoppingCartEmptyReadModel()
-    checkoutService = new CheckoutService(new OrdersApi(new OrdersReadModel()))
+    ordersApi = new OrdersApi(new OrdersReadModel())
+    checkoutService = new CheckoutService(ordersApi)
     itemCountReadModel = new ShoppingCartItemCountReadModel()
-    fixture = new ShoppingCartFixture(repository, productsReadModel, checkoutService)
+    fixture = new ShoppingCartFixture(repository, productsReadModel)
   })
   describe('when creating an empty Shopping Cart', () => {
     let id: UUID
@@ -165,6 +167,7 @@ describe('ShoppingCartFixture', () => {
   })
 
   describe('when a loaded ShoppingCart exists', () => {
+
     beforeEach(() => {
       const cart = ShoppingCart.restore('1', [ITEM])
       repository.create(cart)
@@ -174,15 +177,19 @@ describe('ShoppingCartFixture', () => {
     })
 
     describe('and the cart is checked out', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let spy: any
+
       beforeEach(async () => {
+        spy = jest.spyOn(ordersApi, 'create')
         await new Promise<UUID>(resolve => {
           eventbus.subscribeOnce(SHOPPING_CART_CHECKED_OUT, () =>
             resolve())
           eventbus.dispatch({type: CHECK_OUT_SHOPPING_CART, payload: '1'})
         })
       })
-      it('should forward to checkout service', () => {
-        expect(checkoutService.checkOut).toHaveBeenCalledWith(jasmine.arrayContaining([toData(ITEM)]))
+      it('should forward to orders api', () => {
+        expect(spy).toHaveBeenCalled()
       })
       it('should not consider the cart empty', () => {
         expect(emptyReadModel.isEmpty('1')).toBe(false)
@@ -196,8 +203,10 @@ describe('ShoppingCartFixture', () => {
     })
 
     it('should throw when trying to check out unknown ShoppingCart', () => {
-      expect(() => Global.eventbus.dispatch({type: CHECK_OUT_SHOPPING_CART, payload:'unknown'})).toThrow()
-      expect(checkoutService.checkOut).not.toHaveBeenCalled()
+      // @ts-ignore
+      let spy = jest.spyOn(ordersApi, 'create')
+      expect(() => Global.eventbus.dispatch({type: CHECK_OUT_SHOPPING_CART, payload: 'unknown'})).toThrow()
+      expect(spy).not.toHaveBeenCalled()
     })
 
 

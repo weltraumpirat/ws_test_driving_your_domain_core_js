@@ -3,10 +3,8 @@ import {
   ShoppingCartItem,
   ShoppingCartRepository
 } from './shoppingcart'
-import {CheckoutService} from '../checkout/checkoutservice'
 import {UUID} from '../../types'
 import {validateShoppingCartItem} from '../../validation'
-import {toData} from '../../conversion'
 import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
 import {ProductsReadModel} from '../products/products_readmodel'
 import {Global} from '../../global'
@@ -16,11 +14,7 @@ import {
   ADD_ITEM_TO_SHOPPING_CART,
   CHECK_OUT_SHOPPING_CART,
   CREATE_SHOPPING_CART,
-  REMOVE_ITEM_FROM_SHOPPING_CART,
-  SHOPPING_CART_CHECKED_OUT,
-  SHOPPING_CART_CREATED,
-  SHOPPING_CART_ITEM_ADDED,
-  SHOPPING_CART_ITEM_REMOVED
+  REMOVE_ITEM_FROM_SHOPPING_CART
 } from './shoppingcart_messages'
 
 export interface ShoppingCartData {
@@ -31,15 +25,13 @@ export interface ShoppingCartData {
 
 export class ShoppingCartFixture extends AggregateFixture {
   private _shoppingCartRepository: ShoppingCartRepository
-  private _checkoutService: CheckoutService
   private _productsReadModel: ProductsReadModel
 
 
-  public constructor(repository: ShoppingCartRepository, productsReadModel: ProductsReadModel, checkoutService: CheckoutService) {
+  public constructor(repository: ShoppingCartRepository, productsReadModel: ProductsReadModel) {
     super(Global.eventbus)
     this._shoppingCartRepository = repository
     this._productsReadModel = productsReadModel
-    this._checkoutService = checkoutService
     this._eventbus.subscribe(CREATE_SHOPPING_CART, this.receiveCommand.bind(this))
     this._eventbus.subscribe(CHECK_OUT_SHOPPING_CART, this.receiveCommand.bind(this))
     this._eventbus.subscribe(ADD_ITEM_TO_SHOPPING_CART, this.receiveCommand.bind(this))
@@ -65,8 +57,6 @@ export class ShoppingCartFixture extends AggregateFixture {
   public createShoppingCart(items: ShoppingCartItemData[]): void {
     const cart = ShoppingCart.createWithItems(...(items.map(ShoppingCartItem.fromData)))
     this._shoppingCartRepository.create(cart)
-    const data: ShoppingCartData = toData(cart)
-    this._eventbus.dispatch({type: SHOPPING_CART_CREATED, payload: data})
   }
 
   public addItemToShoppingCart(cartId: UUID, itemData: ShoppingCartItemData): void {
@@ -75,23 +65,16 @@ export class ShoppingCartFixture extends AggregateFixture {
     const cart = this._shoppingCartRepository.findById(cartId)
     cart.addItem(item)
     this._shoppingCartRepository.update(cart)
-    const cartData: ShoppingCartData = toData(cart)
-    this._eventbus.dispatch({type: SHOPPING_CART_ITEM_ADDED, payload: cartData})
   }
 
   public removeItemFromShoppingCart(cartId: UUID, item: ShoppingCartItemData): void {
     const cart = this._shoppingCartRepository.findById(cartId)
     cart.removeItem(ShoppingCartItem.fromData(item))
     this._shoppingCartRepository.update(cart)
-    const cartData: ShoppingCartData = toData(cart)
-    this._eventbus.dispatch({type: SHOPPING_CART_ITEM_REMOVED, payload: cartData})
   }
 
   public checkOut(id: UUID): void {
     const cart = this._shoppingCartRepository.findById(id)
-    const items = cart.items.map(toData) as ShoppingCartItemData[]
-    this._checkoutService.checkOut(items)
-    const cartData: ShoppingCartData = toData(cart)
-    this._eventbus.dispatch({type: SHOPPING_CART_CHECKED_OUT, payload: cartData})
+    cart.checkOut()
   }
 }

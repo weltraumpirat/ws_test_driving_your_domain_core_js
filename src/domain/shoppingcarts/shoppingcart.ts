@@ -4,6 +4,14 @@ import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
 import {UUID} from '../../types'
 import {Aggregate} from '../aggregate'
 import {Global} from '../../global'
+import {toData} from '../../conversion'
+import {
+  SHOPPING_CART_CHECKED_OUT,
+  SHOPPING_CART_CREATED,
+  SHOPPING_CART_ITEM_ADDED,
+  SHOPPING_CART_ITEM_REMOVED
+} from './shoppingcart_messages'
+import {ShoppingCartData} from './shoppingcart_fixture'
 
 export class ShoppingCartItem {
   public readonly id: UUID
@@ -55,14 +63,20 @@ export class ShoppingCart extends Aggregate {
   private constructor(id: UUID, items: ShoppingCartItem[] = []) {
     super(id, Global.eventbus)
     this.items = items
+    const data: ShoppingCartData = toData(this)
+    this._eventbus.dispatch({type: SHOPPING_CART_CREATED, payload: data})
   }
 
   public addItem(item: ShoppingCartItem): void {
     this.items.push(item)
+    const cartData: ShoppingCartData = toData(this)
+    this._eventbus.dispatch({type: SHOPPING_CART_ITEM_ADDED, payload: cartData})
   }
 
   public removeItem(item: ShoppingCartItem): void {
     this.items = this.items.filter((i: ShoppingCartItem): boolean => i.id !== item.id)
+    const cartData: ShoppingCartData = toData(this)
+    this._eventbus.dispatch({type: SHOPPING_CART_ITEM_REMOVED, payload: cartData})
   }
 
 
@@ -80,6 +94,12 @@ export class ShoppingCart extends Aggregate {
 
   public static restore(id: UUID, items: ShoppingCartItem[] = []): ShoppingCart {
     return new ShoppingCart(id, items)
+  }
+
+  public checkOut(): void {
+    const cartData: ShoppingCartData = toData(this)
+    this._eventbus.dispatch({type: SHOPPING_CART_CHECKED_OUT, payload: cartData})
+
   }
 }
 

@@ -3,6 +3,10 @@ import {
   OrderPositionData,
   OrdersApi
 } from '../../api/orders_api'
+import {Service} from '../aggregate'
+import {Global} from '../../global'
+import {SHOPPING_CART_CHECKED_OUT} from '../shoppingcarts/shoppingcart_messages'
+import {Event} from '../../eventbus'
 
 
 type ItemEntry = Map<string, { count: number, price: string }>
@@ -24,14 +28,24 @@ const countItem = (m: ItemEntry, item: ShoppingCartItemData): ItemEntry => {
 
 const countItems = (items: ShoppingCartItemData[]): ItemEntry => items.reduce(countItem, new Map())
 
-export class CheckoutService {
+export class CheckoutService extends Service {
   private _ordersApi: OrdersApi
 
   public constructor(ordersApi: OrdersApi) {
+    super(Global.eventbus)
     this._ordersApi = ordersApi
+    this._eventbus.subscribe(SHOPPING_CART_CHECKED_OUT, this.receiveEvent.bind(this))
   }
 
-  public checkOut(items: ShoppingCartItemData[]): void {
+  private receiveEvent( event: Event): void {
+    switch(event.type) {
+      case SHOPPING_CART_CHECKED_OUT:
+        this.checkOut(event.payload.items)
+        break
+    }
+  }
+
+  private checkOut(items: ShoppingCartItemData[]): void {
     const itemCounts = countItems(items)
     const positions: OrderPositionData[] = []
     itemCounts.forEach((value, key) => {

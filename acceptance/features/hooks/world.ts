@@ -40,20 +40,19 @@ class World {
   public constructor() {
 
     this.productRepository = new ProductRepositoryInMemory()
-    this.productsReadModel = new ProductsReadModel()
     this.productFixture = new ProductFixture(this.productRepository)
+    this.productsReadModel = new ProductsReadModel()
     this.productsApi = new ProductsApi(this.productFixture, this.productsReadModel)
 
     this.ordersReadModel = new OrdersReadModel()
     this.ordersApi = new OrdersApi(this.ordersReadModel)
-
     this.checkoutService = new CheckoutService(this.ordersApi)
 
     this.shoppingCartRepository = new ShoppingCartRepositoryInMemory()
+    this.shoppingCartFixture = new ShoppingCartFixture(this.shoppingCartRepository, this.productsReadModel)
     this.shoppingCartItemsReadModel = new ShoppingCartItemsReadModel()
     this.shoppingCartItemCountReadModel = new ShoppingCartItemCountReadModel()
     this.shoppingCartEmptyReadModel = new ShoppingCartEmptyReadModel()
-    this.shoppingCartFixture = new ShoppingCartFixture(this.shoppingCartRepository, this.productsReadModel, this.checkoutService)
     this.shoppingCartApi = new ShoppingCartsApi(this.shoppingCartFixture, this.shoppingCartItemsReadModel, this.shoppingCartItemCountReadModel, this.shoppingCartEmptyReadModel)
   }
 }
