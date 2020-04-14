@@ -4,8 +4,8 @@ import {
   Event,
   Eventbus
 } from '../../eventbus'
-import {PRODUCT_CREATED} from './product_messages'
 import {Global} from '../../global'
+import {PRODUCT_CREATED} from './external_messages'
 
 export class ProductsReadModel extends ReadModel {
   public readonly products: ProductData[]

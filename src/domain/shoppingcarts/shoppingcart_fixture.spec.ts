@@ -10,7 +10,6 @@ import {
 import {PackagingType} from '../products/product'
 import {toData} from '../../conversion'
 import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
-import {ProductsReadModel} from '../products/products_readmodel'
 import {UUID} from '../../types'
 import {PRODUCT_CREATED} from '../products/product_messages'
 import {
@@ -25,6 +24,7 @@ import {
 } from './shoppingcart_messages'
 import {Global} from '../../global'
 import {Event} from '../../eventbus'
+import {ProductsReadModel} from './products_readmodel'
 let objectContaining = jasmine.objectContaining
 
 

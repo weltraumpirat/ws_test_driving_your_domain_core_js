@@ -6,7 +6,6 @@ import {
 import {UUID} from '../../types'
 import {validateShoppingCartItem} from '../../validation'
 import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
-import {ProductsReadModel} from '../products/products_readmodel'
 import {Global} from '../../global'
 import {AggregateFixture} from '../aggregate'
 import {Command} from '../../eventbus'
@@ -16,6 +15,7 @@ import {
   CREATE_SHOPPING_CART,
   REMOVE_ITEM_FROM_SHOPPING_CART
 } from './shoppingcart_messages'
+import {ProductsReadModel} from './products_readmodel'
 
 export interface ShoppingCartData {
   id: UUID

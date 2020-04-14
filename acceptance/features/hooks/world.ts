@@ -12,11 +12,11 @@ import {
   ProductRepository
 } from '../../../src/domain/products/product_fixture'
 import {OrdersApi} from '../../../src/api/orders_api'
-import {ProductsReadModel} from '../../../src/domain/products/products_readmodel'
 import {ShoppingCartItemsReadModel} from '../../../src/domain/shoppingcarts/shoppingcart_items_readmodel'
 import {OrdersReadModel} from '../../../src/domain/orders/orders_readmodel'
 import {ShoppingCartEmptyReadModel} from '../../../src/domain/shoppingcarts/shoppingcart_empty_readmodel'
 import {ShoppingCartItemCountReadModel} from '../../../src/domain/shoppingcarts/shoppingcart_itemcount_readmodel'
+import {ProductsReadModel} from '../../../src/domain/shoppingcarts/products_readmodel'
 
 class World {
   public productsApi: ProductsApi
@@ -41,14 +41,15 @@ class World {
 
     this.productRepository = new ProductRepositoryInMemory()
     this.productFixture = new ProductFixture(this.productRepository)
-    this.productsReadModel = new ProductsReadModel()
-    this.productsApi = new ProductsApi(this.productFixture, this.productsReadModel)
+    this.productsApi = new ProductsApi(this.productFixture)
 
     this.ordersReadModel = new OrdersReadModel()
     this.ordersApi = new OrdersApi(this.ordersReadModel)
+
     this.checkoutService = new CheckoutService(this.ordersApi)
 
     this.shoppingCartRepository = new ShoppingCartRepositoryInMemory()
+    this.productsReadModel = new ProductsReadModel()
     this.shoppingCartFixture = new ShoppingCartFixture(this.shoppingCartRepository, this.productsReadModel)
     this.shoppingCartItemsReadModel = new ShoppingCartItemsReadModel()
     this.shoppingCartItemCountReadModel = new ShoppingCartItemCountReadModel()
