@@ -5,6 +5,8 @@ import {Aggregate} from '../aggregate'
 import {
   Global
 } from '../../global'
+import {PRODUCT_CREATED} from './product_messages'
+import {toData} from '../../conversion'
 
 export enum PackagingType {
   CARTON = 'Carton',
@@ -29,6 +31,7 @@ export class Product extends Aggregate {
     this.price = price
     this.packagingType = packagingType
     this.name = name
+    this._eventbus.dispatch({type: PRODUCT_CREATED, payload: toData(this)})
   }
 
   public static fromData(data: ProductData): Product {

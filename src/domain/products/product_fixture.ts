@@ -6,7 +6,8 @@ import {AggregateFixture} from '../aggregate'
 import {Command} from '../../eventbus'
 import {
   ADD_PRODUCT,
-  ADD_PRODUCTS
+  ADD_PRODUCTS,
+  PRODUCT_CREATED
 } from './product_messages'
 
 export interface ProductRepository {
@@ -39,7 +40,7 @@ export class ProductFixture implements AggregateFixture {
 
   private addProduct(product: Product): void {
     this._repository.create(product)
-    this._productReadModel.notifyProductCreated(toData(product))
+    this._productReadModel.receiveEvent({type: PRODUCT_CREATED, payload: toData(product)})
   }
 
   private addProducts(data: ProductData[]): void {
