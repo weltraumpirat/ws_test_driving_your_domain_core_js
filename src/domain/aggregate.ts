@@ -20,6 +20,14 @@ export abstract class Aggregate {
   }
 }
 
+export abstract class Service {
+  protected _eventbus: Eventbus
+
+  protected constructor(eventbus: Eventbus) {
+    this._eventbus = eventbus
+  }
+}
+
 export abstract class AggregateFixture {
   protected _eventbus: Eventbus
 
