@@ -1,6 +1,7 @@
 import {UUID} from '../types'
 import {
   Command,
+  Event,
   Eventbus,
   Listener
 } from '../eventbus'
@@ -21,4 +22,8 @@ export abstract class Aggregate {
 
 export interface AggregateFixture {
   receiveCommand(command: Command): void
+}
+
+export interface ReadModel {
+  receiveEvent(event: Event): void
 }
