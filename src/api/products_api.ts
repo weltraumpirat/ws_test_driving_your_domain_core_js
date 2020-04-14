@@ -1,6 +1,7 @@
 import {PackagingType} from '../domain/products/product'
 import {ProductFixture} from '../domain/products/product_fixture'
 import {ProductsReadModel} from '../domain/products/products_readmodel'
+import {ADD_PRODUCTS} from '../domain/products/product_messages'
 
 export interface ProductData {
   id?: string
@@ -20,7 +21,7 @@ export class ProductsApi {
   }
 
   public createCatalogWithProducts(products: ProductData[]): void {
-    this._fixture.addProducts(products)
+    this._fixture.receiveCommand({type: ADD_PRODUCTS, payload: products})
   }
 
   public getProducts(): ProductData[] {
