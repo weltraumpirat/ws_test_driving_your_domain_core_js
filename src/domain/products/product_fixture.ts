@@ -33,8 +33,6 @@ export class ProductFixture implements AggregateFixture {
       case ADD_PRODUCT:
         this.addProduct(command.payload)
         break
-      default:
-        break
     }
   }
 

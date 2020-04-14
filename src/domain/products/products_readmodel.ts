@@ -15,8 +15,6 @@ export class ProductsReadModel implements ReadModel {
       case PRODUCT_CREATED:
         this.notifyProductCreated(event.payload)
         break
-      default:
-        break
     }
   }
 
