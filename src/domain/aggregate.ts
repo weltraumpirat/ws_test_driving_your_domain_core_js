@@ -20,8 +20,14 @@ export abstract class Aggregate {
   }
 }
 
-export interface AggregateFixture {
-  receiveCommand(command: Command): void
+export abstract class AggregateFixture {
+  protected _eventbus: Eventbus
+
+  public constructor(eventbus: Eventbus) {
+    this._eventbus = eventbus
+  }
+
+  protected abstract receiveCommand(command: Command): void
 }
 
 export interface ReadModel {
