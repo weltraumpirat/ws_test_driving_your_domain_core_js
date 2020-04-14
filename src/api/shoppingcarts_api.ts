@@ -4,10 +4,17 @@ import {ShoppingCartItemCountReadModel} from '../domain/shoppingcarts/shoppingca
 import {ShoppingCartEmptyReadModel} from '../domain/shoppingcarts/shoppingcart_empty_readmodel'
 import {UUID} from '../types'
 import {
+  ADD_ITEM_TO_SHOPPING_CART,
+  CHECK_OUT_SHOPPING_CART,
   CREATE_SHOPPING_CART,
-  SHOPPING_CART_CREATED
+  REMOVE_ITEM_FROM_SHOPPING_CART,
+  SHOPPING_CART_CREATED,
+  SHOPPING_CART_ITEM_ADDED,
+  SHOPPING_CART_ITEM_REMOVED
 } from '../domain/shoppingcarts/shoppingcart_messages'
 import {Global} from '../global'
+import {OrderData} from './orders_api'
+import {ORDER_CREATED} from '../domain/orders/order_messages'
 
 export interface ShoppingCartItemData {
   id: string
@@ -42,16 +49,25 @@ export class ShoppingCartsApi {
     })
   }
 
-  public addItemToShoppingCart(cartId: string, data: ShoppingCartItemData): void {
-    this._fixture.addItemToShoppingCart(cartId, data)
+  public addItemToShoppingCart(id: UUID, item: ShoppingCartItemData): Promise<void> {
+    return new Promise<void>(resolve => {
+      Global.eventbus.subscribeOnce(SHOPPING_CART_ITEM_ADDED, () => resolve())
+      Global.eventbus.dispatch({type: ADD_ITEM_TO_SHOPPING_CART, payload: {id, item}})
+    })
   }
 
-  public removeItemFromShoppingCart(cartId: string, item: ShoppingCartItemData): void {
-    this._fixture.removeItemFromShoppingCart(cartId, item)
+  public removeItemFromShoppingCart(id: UUID, item: ShoppingCartItemData): Promise<void> {
+    return new Promise<void>(resolve => {
+      Global.eventbus.subscribeOnce(SHOPPING_CART_ITEM_REMOVED, () => resolve())
+      Global.eventbus.dispatch({type: REMOVE_ITEM_FROM_SHOPPING_CART, payload: {id, item}})
+    })
   }
 
-  public checkOut(id: string): void {
-    this._fixture.checkOut(id)
+  public checkOut(id: UUID): Promise<OrderData> {
+    return new Promise<OrderData>(resolve => {
+      Global.eventbus.subscribeOnce(ORDER_CREATED, ev => resolve(ev.payload))
+      Global.eventbus.dispatch({type: CHECK_OUT_SHOPPING_CART, payload: id})
+    })
   }
 
   public getShoppingCartItems(id: string): ShoppingCartItemData[] {

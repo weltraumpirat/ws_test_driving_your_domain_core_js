@@ -20,7 +20,11 @@ import {UUID} from '../../types'
 import {ShoppingCartItemCountReadModel} from './shoppingcart_itemcount_readmodel'
 import {PRODUCT_CREATED} from '../products/product_messages'
 import {
+  ADD_ITEM_TO_SHOPPING_CART,
+  CHECK_OUT_SHOPPING_CART,
   CREATE_SHOPPING_CART,
+  REMOVE_ITEM_FROM_SHOPPING_CART,
+  SHOPPING_CART_CHECKED_OUT,
   SHOPPING_CART_CREATED,
   SHOPPING_CART_ITEM_ADDED
 } from './shoppingcart_messages'
@@ -42,6 +46,7 @@ const ITEM = ShoppingCartItem.fromData(
 )
 const eventbus = Global.eventbus
 describe('ShoppingCartFixture', () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let fixture: ShoppingCartFixture
   let productsReadModel: ProductsReadModel
   let repository: ShoppingCartRepositoryInMemory
@@ -98,8 +103,12 @@ describe('ShoppingCartFixture', () => {
       })
 
       describe('when the item is valid', () => {
-        beforeEach(() => {
-          fixture.addItemToShoppingCart(id, itemData)
+        beforeEach(async () => {
+          await new Promise<void>(resolve => {
+            eventbus.subscribeOnce(SHOPPING_CART_ITEM_ADDED, () =>
+              resolve())
+            eventbus.dispatch({type: ADD_ITEM_TO_SHOPPING_CART, payload: {id: id, item: itemData}})
+          })
         })
         it('should store the item', () => {
           expect(itemsReadModel.getItems(id)).toEqual([itemData])
@@ -115,12 +124,18 @@ describe('ShoppingCartFixture', () => {
 
       describe('when the item is invalid', () => {
         it('should throw', () => {
-          expect(() => fixture.addItemToShoppingCart(id, {...itemData, name: 'invalid name'})).toThrow()
+          expect(() => Global.eventbus.dispatch({
+            type: ADD_ITEM_TO_SHOPPING_CART,
+            payload: {id, item: {...itemData, name: 'invalid name'}}
+          })).toThrow()
         })
 
         it('should not apply changes', () => {
           try {
-            fixture.addItemToShoppingCart(id, {...itemData, name: 'invalid name'})
+            Global.eventbus.dispatch({
+              type: ADD_ITEM_TO_SHOPPING_CART,
+              payload: {id, item: {...itemData, name: 'invalid name'}}
+            })
           } catch (_) {
           }
           expect(itemsReadModel.getItems(id)).toEqual([])
@@ -131,11 +146,14 @@ describe('ShoppingCartFixture', () => {
 
       describe('when the cart is unknown', () => {
         it('should throw', () => {
-          expect(() => fixture.addItemToShoppingCart('unknown', {...itemData, name: 'invalid name'})).toThrow()
+          expect(() => Global.eventbus.dispatch({
+            type: ADD_ITEM_TO_SHOPPING_CART,
+            payload: {id: 'unknown', item: itemData}
+          })).toThrow()
         })
         it('should not apply changes', () => {
           try {
-            fixture.addItemToShoppingCart('unknown', {...itemData, name: 'invalid name'})
+            Global.eventbus.dispatch({type: ADD_ITEM_TO_SHOPPING_CART, payload: {id: 'unknown', item: itemData}})
           } catch (_) {
           }
           expect(itemsReadModel.getItems(id)).toEqual([])
@@ -160,8 +178,12 @@ describe('ShoppingCartFixture', () => {
     })
 
     describe('and the cart is checked out', () => {
-      beforeEach(() => {
-        fixture.checkOut('1')
+      beforeEach(async () => {
+        await new Promise<UUID>(resolve => {
+          eventbus.subscribeOnce(SHOPPING_CART_CHECKED_OUT, () =>
+            resolve())
+          eventbus.dispatch({type: CHECK_OUT_SHOPPING_CART, payload: '1'})
+        })
       })
       it('should forward to checkout service', () => {
         expect(checkoutService.checkOut).toHaveBeenCalledWith(jasmine.arrayContaining([toData(ITEM)]))
@@ -178,14 +200,14 @@ describe('ShoppingCartFixture', () => {
     })
 
     it('should throw when trying to check out unknown ShoppingCart', () => {
-      expect(() => fixture.checkOut('unknown')).toThrow()
+      expect(() => Global.eventbus.dispatch({type: CHECK_OUT_SHOPPING_CART, payload:'unknown'})).toThrow()
       expect(checkoutService.checkOut).not.toHaveBeenCalled()
     })
 
 
     describe('and removing the only existing item', () => {
       beforeEach(() => {
-        fixture.removeItemFromShoppingCart('1', toData(ITEM))
+        Global.eventbus.dispatch({type: REMOVE_ITEM_FROM_SHOPPING_CART, payload: {id: '1', item: toData(ITEM)}})
       })
 
       it('should be empty', () => {
@@ -203,15 +225,21 @@ describe('ShoppingCartFixture', () => {
     it('should ignore when trying to remove a non-existing item', () => {
       const data: ShoppingCartItemData = toData(ITEM)
       const unknownItem = {...data, id: '0', name: 'unknown item'}
-      fixture.removeItemFromShoppingCart('1', unknownItem)
+      Global.eventbus.dispatch({type: REMOVE_ITEM_FROM_SHOPPING_CART, payload: {id: '1', item: unknownItem}})
+
       expect(emptyReadModel.isEmpty('1')).toBe(false)
     })
 
     it('should throw when trying to remove an item from an unknown ShoppingCart', () => {
-      expect(() => fixture.removeItemFromShoppingCart('unknown', toData(ITEM))).toThrow()
+      expect(() =>
+        Global.eventbus.dispatch({
+          type: REMOVE_ITEM_FROM_SHOPPING_CART,
+          payload: {id: 'unknown', item: toData(ITEM)}
+        })
+      ).toThrow()
     })
   })
-  afterEach(()=>{
+  afterEach(() => {
     eventbus.release()
   })
 })

@@ -23,16 +23,16 @@ Given(/^the shopping cart contains the following items:$/, async function (table
   const items = tableRowsToItems(table)
   this.cartId = await this.shoppingCartApi.createShoppingCartWithItems(...items)
 })
-When(/^I add the following item:$/, function (table: TableDefinition) {
+When(/^I add the following item:$/, async function (table: TableDefinition) {
   const item = tableRowsToItems(table)[0]
-  this.shoppingCartApi.addItemToShoppingCart(this.cartId, item)
+  await this.shoppingCartApi.addItemToShoppingCart(this.cartId, item)
 })
-When(/^I remove the following item:$/, function (table: TableDefinition) {
+When(/^I remove the following item:$/, async function (table: TableDefinition) {
   const item = tableRowsToItems(table)[0]
-  this.shoppingCartApi.removeItemFromShoppingCart(this.cartId, item)
+  await this.shoppingCartApi.removeItemFromShoppingCart(this.cartId, item)
 })
-When(/^I proceed to check out$/, function () {
-  this.order = this.shoppingCartApi.checkOut(this.cartId)
+When(/^I proceed to check out$/, async function () {
+  this.order = await this.shoppingCartApi.checkOut(this.cartId)
 })
 Then(/^the shopping cart is empty$/, function () {
   expect(this.shoppingCartApi.isShoppingCartEmpty(this.cartId)).toBe(true)

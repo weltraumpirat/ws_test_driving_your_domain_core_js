@@ -54,6 +54,9 @@ export class ShoppingCartFixture extends AggregateFixture {
     this._productsReadModel = productsReadModel
     this._checkoutService = checkoutService
     this._eventbus.subscribe(CREATE_SHOPPING_CART, this.receiveCommand.bind(this))
+    this._eventbus.subscribe(CHECK_OUT_SHOPPING_CART, this.receiveCommand.bind(this))
+    this._eventbus.subscribe(ADD_ITEM_TO_SHOPPING_CART, this.receiveCommand.bind(this))
+    this._eventbus.subscribe(REMOVE_ITEM_FROM_SHOPPING_CART, this.receiveCommand.bind(this))
   }
 
   protected receiveCommand(command: Command): void {
