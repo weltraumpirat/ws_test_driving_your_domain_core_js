@@ -44,15 +44,17 @@ class World {
     this.productFixture = new ProductFixture(this.productRepository, this.productsReadModel)
     this.productsApi = new ProductsApi(this.productFixture, this.productsReadModel)
 
+    this.ordersReadModel = new OrdersReadModel()
+    this.ordersApi = new OrdersApi(this.ordersReadModel)
+
+    this.checkoutService = new CheckoutService(this.ordersApi)
+
     this.shoppingCartRepository = new ShoppingCartRepositoryInMemory()
     this.shoppingCartItemsReadModel = new ShoppingCartItemsReadModel()
     this.shoppingCartItemCountReadModel = new ShoppingCartItemCountReadModel()
     this.shoppingCartEmptyReadModel = new ShoppingCartEmptyReadModel()
-    this.ordersReadModel = new OrdersReadModel()
-    this.ordersApi = new OrdersApi(this.ordersReadModel)
-    this.checkoutService = new CheckoutService(this.ordersApi)
     this.shoppingCartFixture = new ShoppingCartFixture(this.shoppingCartRepository, this.shoppingCartItemsReadModel, this.shoppingCartItemCountReadModel, this.shoppingCartEmptyReadModel, this.productsReadModel, this.checkoutService)
-    this.shoppingCartApi = new ShoppingCartsApi(this.shoppingCartFixture)
+    this.shoppingCartApi = new ShoppingCartsApi(this.shoppingCartFixture, this.shoppingCartItemsReadModel, this.shoppingCartItemCountReadModel, this.shoppingCartEmptyReadModel)
   }
 }
 

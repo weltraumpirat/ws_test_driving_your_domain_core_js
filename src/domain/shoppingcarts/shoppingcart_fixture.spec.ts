@@ -69,20 +69,12 @@ describe('ShoppingCartFixture', () => {
       expect(emptyReadModel.isEmpty(id)).toBe(true)
     })
 
-    it('should also consider an unknown cart empty', () => {
-      expect(fixture.isShoppingCartEmpty('unknown')).toBe(false)
-    })
-
     it('should return no items for the cart', () => {
       expect(itemsReadModel.getItems(id)).toEqual([])
     })
 
     it('should return count of 0 items for the cart', () => {
       expect(itemCountReadModel.getItemCount(id)).toEqual(0)
-    })
-
-    it('should throw when querying unknown ShoppingCart items', () => {
-      expect(() => fixture.getShoppingCartItems('unknown')).toThrow()
     })
 
     describe('and an item is added', () => {
@@ -201,7 +193,7 @@ describe('ShoppingCartFixture', () => {
       const data: ShoppingCartItemData = toData(ITEM)
       const unknownItem = {...data, id: '0', name: 'unknown item'}
       fixture.removeItemFromShoppingCart('1', unknownItem)
-      expect(fixture.isShoppingCartEmpty('1')).toBe(false)
+      expect(emptyReadModel.isEmpty('1')).toBe(false)
     })
 
     it('should throw when trying to remove an item from an unknown ShoppingCart', () => {

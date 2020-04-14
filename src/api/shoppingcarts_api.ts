@@ -1,4 +1,7 @@
 import {ShoppingCartFixture} from '../domain/shoppingcarts/shoppingcart_fixture'
+import {ShoppingCartItemsReadModel} from '../domain/shoppingcarts/shoppingcart_items_readmodel'
+import {ShoppingCartItemCountReadModel} from '../domain/shoppingcarts/shoppingcart_itemcount_readmodel'
+import {ShoppingCartEmptyReadModel} from '../domain/shoppingcarts/shoppingcart_empty_readmodel'
 
 export interface ShoppingCartItemData {
   id: string
@@ -11,9 +14,15 @@ export interface ShoppingCartItemData {
 
 export class ShoppingCartsApi {
   private _fixture: ShoppingCartFixture
+  private _shoppingCartItemsReadModel: ShoppingCartItemsReadModel
+  private _shoppingCartItemCountReadModel: ShoppingCartItemCountReadModel
+  private _shoppingCartEmptyReadModel: ShoppingCartEmptyReadModel
 
-  public constructor(fixture: ShoppingCartFixture) {
+  public constructor(fixture: ShoppingCartFixture, itemsReadModel: ShoppingCartItemsReadModel, itemCountReadModel: ShoppingCartItemCountReadModel, emptyReadModel: ShoppingCartEmptyReadModel) {
     this._fixture = fixture
+    this._shoppingCartItemsReadModel = itemsReadModel
+    this._shoppingCartItemCountReadModel = itemCountReadModel
+    this._shoppingCartEmptyReadModel = emptyReadModel
   }
 
   public createEmptyShoppingCart(): string {
@@ -37,14 +46,14 @@ export class ShoppingCartsApi {
   }
 
   public getShoppingCartItems(id: string): ShoppingCartItemData[] {
-    return this._fixture.getShoppingCartItems(id)
+    return this._shoppingCartItemsReadModel.getItems(id)
   }
 
   public getShoppingCartItemCount(id: string): number {
-    return this._fixture.getShoppingCartItemCount(id)
+    return this._shoppingCartItemCountReadModel.getItemCount(id)
   }
 
   public isShoppingCartEmpty(id: string): boolean {
-    return this._fixture.isShoppingCartEmpty(id)
+    return this._shoppingCartEmptyReadModel.isEmpty(id)
   }
 }

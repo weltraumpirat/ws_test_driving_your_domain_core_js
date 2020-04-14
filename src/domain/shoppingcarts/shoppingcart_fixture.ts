@@ -84,16 +84,4 @@ export class ShoppingCartFixture {
     this._shoppingCartItemCountReadModel.notifyCheckedOut(cartData)
     this._shoppingCartEmptyReadModel.notifyCheckedOut(cartData)
   }
-
-  public isShoppingCartEmpty(id: UUID): boolean {
-    return this._shoppingCartEmptyReadModel.isEmpty(id)
-  }
-
-  public getShoppingCartItems(id: UUID): ShoppingCartItemData[] {
-    return this._shoppingCartItemsReadModel.getItems(id)
-  }
-
-  public getShoppingCartItemCount(id: UUID): number {
-    return this._shoppingCartItemCountReadModel.getItemCount(id)
-  }
 }
