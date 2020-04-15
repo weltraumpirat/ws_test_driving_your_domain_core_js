@@ -17,6 +17,8 @@ import {OrdersReadModel} from '../../../src/domain/orders/orders_readmodel'
 import {ShoppingCartEmptyReadModel} from '../../../src/domain/shoppingcarts/shoppingcart_empty_readmodel'
 import {ShoppingCartItemCountReadModel} from '../../../src/domain/shoppingcarts/shoppingcart_itemcount_readmodel'
 import {ProductsReadModel} from '../../../src/domain/shoppingcarts/products_readmodel'
+import {OrderFixture} from '../../../src/domain/orders/order_fixture'
+import {OrderRepositoryInMemory} from '../../../src/persistence/order_repository'
 
 class World {
   public productsApi: ProductsApi
@@ -30,6 +32,7 @@ class World {
   private shoppingCartItemCountReadModel: ShoppingCartItemCountReadModel
   private shoppingCartEmptyReadModel: ShoppingCartEmptyReadModel
   public checkoutService: CheckoutService
+  private orderFixture: OrderFixture
   public ordersApi: OrdersApi
   public ordersReadModel: OrdersReadModel
 
@@ -44,9 +47,10 @@ class World {
     this.productsApi = new ProductsApi(this.productFixture)
 
     this.ordersReadModel = new OrdersReadModel()
+    this.orderFixture = new OrderFixture(new OrderRepositoryInMemory())
     this.ordersApi = new OrdersApi(this.ordersReadModel)
 
-    this.checkoutService = new CheckoutService(this.ordersApi)
+    this.checkoutService = new CheckoutService()
 
     this.shoppingCartRepository = new ShoppingCartRepositoryInMemory()
     this.productsReadModel = new ProductsReadModel()

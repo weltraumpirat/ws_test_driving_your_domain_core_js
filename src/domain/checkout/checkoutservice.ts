@@ -1,12 +1,13 @@
 import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
-import {
-  OrderPositionData,
-  OrdersApi
-} from '../../api/orders_api'
+import {OrderPositionData} from '../../api/orders_api'
 import {Service} from '../aggregate'
 import {Global} from '../../global'
 import {SHOPPING_CART_CHECKED_OUT} from '../shoppingcarts/shoppingcart_messages'
-import {Event} from '../../eventbus'
+import {
+  Event,
+  Eventbus
+} from '../../eventbus'
+import {CREATE_ORDER} from '../orders/order_messages'
 
 
 type ItemEntry = Map<string, { count: number, price: string }>
@@ -29,16 +30,14 @@ const countItem = (m: ItemEntry, item: ShoppingCartItemData): ItemEntry => {
 const countItems = (items: ShoppingCartItemData[]): ItemEntry => items.reduce(countItem, new Map())
 
 export class CheckoutService extends Service {
-  private _ordersApi: OrdersApi
 
-  public constructor(ordersApi: OrdersApi) {
-    super(Global.eventbus)
-    this._ordersApi = ordersApi
+  public constructor(eventbus: Eventbus = Global.eventbus) {
+    super(eventbus)
     this._eventbus.subscribe(SHOPPING_CART_CHECKED_OUT, this.receiveEvent.bind(this))
   }
 
-  private receiveEvent( event: Event): void {
-    switch(event.type) {
+  private receiveEvent(event: Event): void {
+    switch (event.type) {
       case SHOPPING_CART_CHECKED_OUT:
         this.checkOut(event.payload.items)
         break
@@ -52,7 +51,7 @@ export class CheckoutService extends Service {
       const combined = value.count * parseFloat(value.price)
       positions.push({itemName: key, count: value.count, singlePrice: value.price, combinedPrice: combined + ' EUR'})
     })
-    this._ordersApi.create({positions})
+    this._eventbus.dispatch({type: CREATE_ORDER, payload: {positions}})
   }
 }
 

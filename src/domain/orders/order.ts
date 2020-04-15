@@ -71,3 +71,9 @@ export class Order extends Aggregate {
     return new Order(id, positions)
   }
 }
+
+export interface OrderRepository {
+  findAll(): Order[]
+
+  create(order: Order): void
+}
