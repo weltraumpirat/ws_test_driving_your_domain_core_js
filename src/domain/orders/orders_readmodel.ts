@@ -31,4 +31,8 @@ export class OrdersReadModel extends ReadModel {
   private notifyOrderCreated(order: OrderData): void {
     this.orders.set(ensure(order.id), order)
   }
+
+  public getOrders(): OrderData [] {
+    return [...(this.orders.values())]
+  }
 }
