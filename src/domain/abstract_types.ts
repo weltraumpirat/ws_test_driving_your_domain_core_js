@@ -2,8 +2,7 @@ import {UUID} from '../types'
 import {
   Command,
   Event,
-  Eventbus,
-  Listener
+  Eventbus
 } from '../eventbus'
 
 export abstract class Aggregate {
@@ -13,10 +12,6 @@ export abstract class Aggregate {
   protected constructor(id: UUID, eventbus: Eventbus) {
     this.id = id
     this._eventbus = eventbus
-  }
-
-  public subscribeOnce(type: string, listener: Listener): void {
-    this._eventbus.subscribeOnce(type, listener)
   }
 }
 

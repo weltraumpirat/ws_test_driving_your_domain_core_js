@@ -1,4 +1,4 @@
-import {AggregateFixture} from '../aggregate'
+import {AggregateFixture} from '../abstract_types'
 import {
   Command,
   Eventbus

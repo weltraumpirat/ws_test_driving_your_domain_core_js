@@ -2,7 +2,7 @@ import {
   ensure,
   UUID
 } from '../../types'
-import {ReadModel} from '../aggregate'
+import {ReadModel} from '../abstract_types'
 import {
   Event,
   Eventbus

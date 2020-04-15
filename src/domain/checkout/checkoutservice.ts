@@ -1,6 +1,6 @@
 import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
 import {OrderPositionData} from '../../api/orders_api'
-import {Service} from '../aggregate'
+import {Service} from '../abstract_types'
 import {Global} from '../../global'
 import {SHOPPING_CART_CHECKED_OUT} from '../shoppingcarts/shoppingcart_messages'
 import {

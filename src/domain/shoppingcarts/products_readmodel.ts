@@ -1,5 +1,5 @@
 import {ProductData} from '../../api/products_api'
-import {ReadModel} from '../aggregate'
+import {ReadModel} from '../abstract_types'
 import {
   Event,
   Eventbus

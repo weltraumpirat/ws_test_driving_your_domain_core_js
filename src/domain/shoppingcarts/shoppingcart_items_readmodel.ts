@@ -4,7 +4,7 @@ import {
 } from '../../types'
 import {ShoppingCartData} from './shoppingcart_fixture'
 import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
-import {ReadModel} from '../aggregate'
+import {ReadModel} from '../abstract_types'
 import {Event} from '../../eventbus'
 import {Global} from '../../global'
 import {

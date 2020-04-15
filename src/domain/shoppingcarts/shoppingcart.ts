@@ -2,7 +2,7 @@
 import uuid from 'uuid/v4'
 import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
 import {UUID} from '../../types'
-import {Aggregate} from '../aggregate'
+import {Aggregate} from '../abstract_types'
 import {Global} from '../../global'
 import {toData} from '../../conversion'
 import {

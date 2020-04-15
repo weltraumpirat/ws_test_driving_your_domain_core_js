@@ -1,6 +1,6 @@
 // @ts-ignore
 import uuid from 'uuid/v4'
-import {Aggregate} from '../aggregate'
+import {Aggregate} from '../abstract_types'
 import {Global} from '../../global'
 import {toData} from '../../conversion'
 import {ORDER_CREATED} from './order_messages'

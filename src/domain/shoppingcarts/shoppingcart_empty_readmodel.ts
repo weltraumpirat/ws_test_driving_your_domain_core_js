@@ -1,6 +1,6 @@
 import {UUID} from '../../types'
 import {ShoppingCartData} from './shoppingcart_fixture'
-import {ReadModel} from '../aggregate'
+import {ReadModel} from '../abstract_types'
 import {
   Event,
   Eventbus

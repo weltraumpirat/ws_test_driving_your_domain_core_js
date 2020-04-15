@@ -7,7 +7,7 @@ import {UUID} from '../../types'
 import {validateShoppingCartItem} from '../../validation'
 import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
 import {Global} from '../../global'
-import {AggregateFixture} from '../aggregate'
+import {AggregateFixture} from '../abstract_types'
 import {Command} from '../../eventbus'
 import {
   ADD_ITEM_TO_SHOPPING_CART,

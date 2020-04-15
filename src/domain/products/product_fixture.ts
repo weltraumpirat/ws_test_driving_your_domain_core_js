@@ -1,6 +1,6 @@
 import {Product} from './product'
 import {ProductData} from '../../api/products_api'
-import {AggregateFixture} from '../aggregate'
+import {AggregateFixture} from '../abstract_types'
 import {
   Command,
   Eventbus
