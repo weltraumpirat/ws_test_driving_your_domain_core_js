@@ -43,9 +43,8 @@ export class OrderPosition {
     return new OrderPosition(id, itemName, count, singlePrice, combinedPrice)
   }
 
-  public static fromData(
-    data: OrderPositionData): OrderPosition {
-    return new OrderPosition(data.id || uuid(), data.itemName, data.count, data.singlePrice, data.combinedPrice)
+  public static fromData(data: OrderPositionData): OrderPosition {
+    return new OrderPosition(data.id || uuid(), data.itemName, data.count, data.singlePrice, data.combinedPrice)
   }
 }
 
