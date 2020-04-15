@@ -15,6 +15,7 @@ import {
 import {Global} from '../global'
 import {OrderData} from './orders_api'
 import {ORDER_CREATED} from '../domain/orders/order_messages'
+import {Eventbus} from '../eventbus'
 
 export interface ShoppingCartItemData {
   id: string
@@ -30,12 +31,19 @@ export class ShoppingCartsApi {
   private _shoppingCartItemsReadModel: ShoppingCartItemsReadModel
   private _shoppingCartItemCountReadModel: ShoppingCartItemCountReadModel
   private _shoppingCartEmptyReadModel: ShoppingCartEmptyReadModel
+  private _eventbus: Eventbus
 
-  public constructor(fixture: ShoppingCartFixture, itemsReadModel: ShoppingCartItemsReadModel, itemCountReadModel: ShoppingCartItemCountReadModel, emptyReadModel: ShoppingCartEmptyReadModel) {
+  public constructor(
+    fixture: ShoppingCartFixture,
+    itemsReadModel: ShoppingCartItemsReadModel,
+    itemCountReadModel: ShoppingCartItemCountReadModel,
+    emptyReadModel: ShoppingCartEmptyReadModel,
+    eventbus: Eventbus = Global.eventbus) {
     this._fixture = fixture
     this._shoppingCartItemsReadModel = itemsReadModel
     this._shoppingCartItemCountReadModel = itemCountReadModel
     this._shoppingCartEmptyReadModel = emptyReadModel
+    this._eventbus = eventbus
   }
 
   public createEmptyShoppingCart(): Promise<UUID> {
@@ -44,29 +52,29 @@ export class ShoppingCartsApi {
 
   public createShoppingCartWithItems(...items: ShoppingCartItemData[]): Promise<UUID> {
     return new Promise<UUID>(resolve => {
-      Global.eventbus.subscribeOnce(SHOPPING_CART_CREATED, ev => resolve(ev.payload.id))
-      Global.eventbus.dispatch({type: CREATE_SHOPPING_CART, payload: items})
+      this._eventbus.subscribeOnce(SHOPPING_CART_CREATED, ev => resolve(ev.payload.id))
+      this._eventbus.dispatch({type: CREATE_SHOPPING_CART, payload: items})
     })
   }
 
   public addItemToShoppingCart(id: UUID, item: ShoppingCartItemData): Promise<void> {
     return new Promise<void>(resolve => {
-      Global.eventbus.subscribeOnce(SHOPPING_CART_ITEM_ADDED, () => resolve())
-      Global.eventbus.dispatch({type: ADD_ITEM_TO_SHOPPING_CART, payload: {id, item}})
+      this._eventbus.subscribeOnce(SHOPPING_CART_ITEM_ADDED, () => resolve())
+      this._eventbus.dispatch({type: ADD_ITEM_TO_SHOPPING_CART, payload: {id, item}})
     })
   }
 
   public removeItemFromShoppingCart(id: UUID, item: ShoppingCartItemData): Promise<void> {
     return new Promise<void>(resolve => {
-      Global.eventbus.subscribeOnce(SHOPPING_CART_ITEM_REMOVED, () => resolve())
-      Global.eventbus.dispatch({type: REMOVE_ITEM_FROM_SHOPPING_CART, payload: {id, item}})
+      this._eventbus.subscribeOnce(SHOPPING_CART_ITEM_REMOVED, () => resolve())
+      this._eventbus.dispatch({type: REMOVE_ITEM_FROM_SHOPPING_CART, payload: {id, item}})
     })
   }
 
   public checkOut(id: UUID): Promise<OrderData> {
     return new Promise<OrderData>(resolve => {
-      Global.eventbus.subscribeOnce(ORDER_CREATED, ev => resolve(ev.payload))
-      Global.eventbus.dispatch({type: CHECK_OUT_SHOPPING_CART, payload: id})
+      this._eventbus.subscribeOnce(ORDER_CREATED, ev => resolve(ev.payload))
+      this._eventbus.dispatch({type: CHECK_OUT_SHOPPING_CART, payload: id})
     })
   }
 
