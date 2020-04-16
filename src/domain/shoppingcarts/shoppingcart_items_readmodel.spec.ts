@@ -20,6 +20,8 @@ const ITEM = ShoppingCartItem.fromData(
     price: '1.19 EUR'
   }
 )
+const eventbus = Global.eventbus
+
 describe('ShoppingCartItemsReadModel', () => {
   let readModel: ShoppingCartItemsReadModel
   const ID = '1'
@@ -28,7 +30,7 @@ describe('ShoppingCartItemsReadModel', () => {
   })
   describe('when creating an empty Shopping Cart', () => {
     beforeEach(() => {
-      Global.eventbus.dispatch({type: SHOPPING_CART_CREATED, payload: {id: ID, items: []}})
+      eventbus.dispatch({type: SHOPPING_CART_CREATED, payload: {id: ID, items: []}})
     })
 
     it('should return no items for the cart', () => {
@@ -43,14 +45,14 @@ describe('ShoppingCartItemsReadModel', () => {
       let itemData: ShoppingCartItemData
       beforeEach(() => {
         itemData = toData(ITEM)
-        Global.eventbus.dispatch({type: SHOPPING_CART_ITEM_ADDED, payload: {id: ID, items: [itemData]}})
+        eventbus.dispatch({type: SHOPPING_CART_ITEM_ADDED, payload: {id: ID, items: [itemData]}})
       })
       it('should store the item', () => {
         expect(readModel.getItems(ID)).toEqual([itemData])
       })
       describe('and the existing item is removed', () => {
         beforeEach(() => {
-          Global.eventbus.dispatch({type: SHOPPING_CART_ITEM_REMOVED, payload: {id: ID, items: []}})
+          eventbus.dispatch({type: SHOPPING_CART_ITEM_REMOVED, payload: {id: ID, items: []}})
         })
 
         it('should return no items', () => {
@@ -59,7 +61,7 @@ describe('ShoppingCartItemsReadModel', () => {
       })
       describe('and the cart is checked out', () => {
         beforeEach(() => {
-          Global.eventbus.dispatch({type: SHOPPING_CART_CHECKED_OUT, payload: {id: ID, items: [itemData]}})
+          eventbus.dispatch({type: SHOPPING_CART_CHECKED_OUT, payload: {id: ID, items: [itemData]}})
         })
         it('should throw when querying items', () => {
           expect(() => readModel.getItems(ID)).toThrow()

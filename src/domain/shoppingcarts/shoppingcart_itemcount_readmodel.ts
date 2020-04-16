@@ -11,13 +11,16 @@ import {
   SHOPPING_CART_ITEM_ADDED,
   SHOPPING_CART_ITEM_REMOVED
 } from './shoppingcart_messages'
-import {Event} from '../../eventbus'
+import {
+  Event,
+  Eventbus
+} from '../../eventbus'
 
 export class ShoppingCartItemCountReadModel extends ReadModel {
   public readonly carts: Map<UUID, number>
 
-  public constructor() {
-    super(Global.eventbus)
+  public constructor(eventbus: Eventbus = Global.eventbus) {
+    super(eventbus)
     this.carts = new Map()
     this._eventbus.subscribe(SHOPPING_CART_CREATED, this.receiveEvent.bind(this))
     this._eventbus.subscribe(SHOPPING_CART_CHECKED_OUT, this.receiveEvent.bind(this))

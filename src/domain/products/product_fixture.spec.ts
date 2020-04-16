@@ -9,6 +9,8 @@ import {
 import {Global} from '../../global'
 import {ensure} from '../../types'
 
+const eventbus = Global.eventbus
+
 describe('ProductFixture', () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let catalog: ProductFixture
@@ -26,19 +28,19 @@ describe('ProductFixture', () => {
     })
 
     it('should store a new product', () => {
-      Global.eventbus.dispatch({type: ADD_PRODUCT, payload: product})
+      eventbus.dispatch({type: ADD_PRODUCT, payload: product})
       expect(repository.findAll()).toHaveLength(1)
       expectEqualData(ensure(repository.findById('1')), product)
     })
 
     it('should store a list of previously created products', () => {
-      Global.eventbus.dispatch({type: ADD_PRODUCTS, payload: [product]})
+      eventbus.dispatch({type: ADD_PRODUCTS, payload: [product]})
       expect(repository.findAll()).toHaveLength(1)
       expectEqualData(ensure(repository.findById('1')), product)
     })
 
     afterEach(() => {
-      Global.eventbus.release()
+      eventbus.release()
     })
   })
 })

@@ -22,6 +22,8 @@ const ITEM = ShoppingCartItem.fromData(
     price: '1.19 EUR'
   }
 )
+const eventbus = Global.eventbus
+
 describe('ShoppingCartEmptyReadModel', () => {
   let readModel: ShoppingCartEmptyReadModel
   const ID = '1'
@@ -30,7 +32,7 @@ describe('ShoppingCartEmptyReadModel', () => {
   })
   describe('when creating an empty Shopping Cart', () => {
     beforeEach(() => {
-      Global.eventbus.dispatch({type: SHOPPING_CART_CREATED, payload: {id: ID, items: []}})
+      eventbus.dispatch({type: SHOPPING_CART_CREATED, payload: {id: ID, items: []}})
     })
 
     it('should consider the cart empty', () => {
@@ -46,7 +48,7 @@ describe('ShoppingCartEmptyReadModel', () => {
 
       beforeEach(() => {
         itemData = toData(ITEM)
-        Global.eventbus.dispatch({type: SHOPPING_CART_ITEM_ADDED, payload: {id: ID, items: [itemData]}})
+        eventbus.dispatch({type: SHOPPING_CART_ITEM_ADDED, payload: {id: ID, items: [itemData]}})
       })
 
       it('not consider the cart empty', () => {
@@ -55,7 +57,7 @@ describe('ShoppingCartEmptyReadModel', () => {
 
       describe('and the last existing item is removed', () => {
         beforeEach(() => {
-          Global.eventbus.dispatch({type: SHOPPING_CART_ITEM_REMOVED, payload: {id: ID, items: []}})
+          eventbus.dispatch({type: SHOPPING_CART_ITEM_REMOVED, payload: {id: ID, items: []}})
         })
 
         it('should consider the cart empty', () => {
@@ -65,7 +67,7 @@ describe('ShoppingCartEmptyReadModel', () => {
 
       describe('and the cart is checked out', () => {
         beforeEach(() => {
-          Global.eventbus.dispatch({type: SHOPPING_CART_CHECKED_OUT, payload: {id: ID, items: [itemData]}})
+          eventbus.dispatch({type: SHOPPING_CART_CHECKED_OUT, payload: {id: ID, items: [itemData]}})
         })
 
         it('should not consider the cart empty', () => {

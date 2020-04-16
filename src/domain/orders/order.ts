@@ -5,6 +5,7 @@ import {Global} from '../../global'
 import {toData} from '../../conversion'
 import {ORDER_CREATED} from './order_messages'
 import {OrderPositionData} from '../../api/orders_api'
+import {Eventbus} from '../../eventbus'
 
 export class OrderPosition {
   public readonly id: string
@@ -51,8 +52,8 @@ export class OrderPosition {
 export class Order extends Aggregate {
   public readonly positions: OrderPosition[]
 
-  public constructor(id: string, positions: OrderPosition[]) {
-    super(id, Global.eventbus)
+  public constructor(id: string, positions: OrderPosition[], eventbus: Eventbus = Global.eventbus) {
+    super(id, eventbus)
     this.positions = positions
     this._eventbus.dispatch({type: ORDER_CREATED, payload: {...toData(this), total: this.total}})
   }

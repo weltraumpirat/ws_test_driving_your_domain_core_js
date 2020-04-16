@@ -15,9 +15,9 @@ import {OrderFixture} from './order_fixture'
 import {OrderRepositoryInMemory} from '../../persistence/order_repository'
 
 const objectContaining = jasmine.objectContaining
+const eventbus: Eventbus = Global.eventbus
 
 describe('OrderFixture', () => {
-  const eventbus: Eventbus = Global.eventbus
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let fixture: OrderFixture
   let repository: OrderRepository

@@ -8,7 +8,10 @@ import {validateShoppingCartItem} from '../../validation'
 import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
 import {Global} from '../../global'
 import {AggregateFixture} from '../abstract_types'
-import {Command} from '../../eventbus'
+import {
+  Command,
+  Eventbus
+} from '../../eventbus'
 import {
   ADD_ITEM_TO_SHOPPING_CART,
   CHECK_OUT_SHOPPING_CART,
@@ -28,8 +31,12 @@ export class ShoppingCartFixture extends AggregateFixture {
   private _productsReadModel: ProductsReadModel
 
 
-  public constructor(repository: ShoppingCartRepository, productsReadModel: ProductsReadModel) {
-    super(Global.eventbus)
+  public constructor(
+    repository: ShoppingCartRepository,
+    productsReadModel: ProductsReadModel,
+    eventbus: Eventbus = Global.eventbus
+  ) {
+    super(eventbus)
     this._shoppingCartRepository = repository
     this._productsReadModel = productsReadModel
     this._eventbus.subscribe(CREATE_SHOPPING_CART, this.receiveCommand.bind(this))

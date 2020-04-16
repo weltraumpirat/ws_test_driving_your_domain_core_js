@@ -5,7 +5,10 @@ import {
 import {ShoppingCartData} from './shoppingcart_fixture'
 import {ShoppingCartItemData} from '../../api/shoppingcarts_api'
 import {ReadModel} from '../abstract_types'
-import {Event} from '../../eventbus'
+import {
+  Event,
+  Eventbus
+} from '../../eventbus'
 import {Global} from '../../global'
 import {
   SHOPPING_CART_CHECKED_OUT,
@@ -17,8 +20,8 @@ import {
 export class ShoppingCartItemsReadModel extends ReadModel{
   public readonly carts: Map<UUID, ShoppingCartItemData[]>
 
-  public constructor() {
-    super(Global.eventbus)
+  public constructor(eventbus: Eventbus = Global.eventbus) {
+    super(eventbus)
     this.carts = new Map()
     this._eventbus.subscribe(SHOPPING_CART_CREATED, this.receiveEvent.bind(this))
     this._eventbus.subscribe(SHOPPING_CART_CHECKED_OUT, this.receiveEvent.bind(this))

@@ -41,6 +41,7 @@ const ITEM = ShoppingCartItem.fromData(
   }
 )
 const eventbus = Global.eventbus
+
 describe('ShoppingCartFixture', () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let fixture: ShoppingCartFixture

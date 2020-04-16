@@ -12,10 +12,11 @@ import {Global} from '../../global'
 import {CREATE_ORDER} from '../orders/order_messages'
 import {toData} from '../../conversion'
 
+const eventbus: Eventbus = Global.eventbus
+
 describe('CheckoutService:', () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let checkoutService: CheckoutService
-  const eventbus: Eventbus = Global.eventbus
   let order: OrderData
 
   beforeEach(() => {

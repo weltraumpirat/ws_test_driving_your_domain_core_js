@@ -30,7 +30,6 @@ const countItem = (m: ItemEntry, item: ShoppingCartItemData): ItemEntry => {
 const countItems = (items: ShoppingCartItemData[]): ItemEntry => items.reduce(countItem, new Map())
 
 export class CheckoutService extends Service {
-
   public constructor(eventbus: Eventbus = Global.eventbus) {
     super(eventbus)
     this._eventbus.subscribe(SHOPPING_CART_CHECKED_OUT, this.receiveEvent.bind(this))

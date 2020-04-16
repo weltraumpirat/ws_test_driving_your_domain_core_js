@@ -12,6 +12,7 @@ import {
   SHOPPING_CART_ITEM_REMOVED
 } from './shoppingcart_messages'
 import {ShoppingCartData} from './shoppingcart_fixture'
+import {Eventbus} from '../../eventbus'
 
 export class ShoppingCartItem {
   public readonly id: UUID
@@ -60,8 +61,8 @@ export class ShoppingCartItem {
 export class ShoppingCart extends Aggregate {
   public items: ShoppingCartItem[]
 
-  private constructor(id: UUID, items: ShoppingCartItem[] = []) {
-    super(id, Global.eventbus)
+  private constructor(id: UUID, items: ShoppingCartItem[] = [], eventbus: Eventbus = Global.eventbus) {
+    super(id, eventbus)
     this.items = items
     const data: ShoppingCartData = toData(this)
     this._eventbus.dispatch({type: SHOPPING_CART_CREATED, payload: data})
@@ -91,11 +92,11 @@ export class ShoppingCart extends Aggregate {
   }
 
   public static createWithItems(...items: ShoppingCartItem[]): ShoppingCart {
-    return new ShoppingCart(uuid(), [...items])
+    return new ShoppingCart(uuid(), [...items], Global.eventbus)
   }
 
   public static restore(id: UUID, items: ShoppingCartItem[] = []): ShoppingCart {
-    return new ShoppingCart(id, items)
+    return new ShoppingCart(id, items, Global.eventbus)
   }
 
   public checkOut(): void {
