@@ -8,11 +8,11 @@ import {Global} from '../../global'
 import {PRODUCT_CREATED} from './external_messages'
 
 export class ProductsReadModel extends ReadModel {
-  public readonly products: ProductData[]
+  private _products: ProductData[]
 
   public constructor(eventbus: Eventbus = Global.eventbus) {
     super(eventbus)
-    this.products = []
+    this._products = []
     this._eventbus.subscribe(PRODUCT_CREATED, this.receiveEvent.bind(this))
   }
 
@@ -25,6 +25,10 @@ export class ProductsReadModel extends ReadModel {
   }
 
   private notifyProductCreated(product: ProductData): void {
-    this.products.push(product)
+    this._products.push(product)
+  }
+
+  public getProducts(): ProductData[] {
+    return this._products
   }
 }

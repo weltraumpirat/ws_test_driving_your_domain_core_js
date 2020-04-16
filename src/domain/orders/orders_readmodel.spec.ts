@@ -29,7 +29,7 @@ describe('OrdersReadModel', () => {
       ))
       eventbus.dispatch({type: ORDER_CREATED, payload: order})
     })
-    it('should return one order', () => {
+    it('should return list of one order', () => {
       expect(ordersReadModel.getOrders()).toHaveLength(1)
     })
   })
