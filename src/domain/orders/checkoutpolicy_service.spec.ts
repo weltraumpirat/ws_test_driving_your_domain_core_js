@@ -1,26 +1,26 @@
-import {CheckoutService} from './checkoutservice'
+import {CheckoutPolicyService} from './checkoutpolicy_service'
 import {equalOrderIgnoringIds} from '../../comparison'
 import {ShoppingCartItem} from '../shoppingcarts/shoppingcart'
 import {
   Order,
   OrderPosition
-} from '../orders/order'
+} from './order'
 import {OrderData} from '../../api/orders_api'
 import {SHOPPING_CART_CHECKED_OUT} from '../shoppingcarts/shoppingcart_messages'
 import {Eventbus} from '../../eventbus'
 import {Global} from '../../global'
-import {CREATE_ORDER} from '../orders/order_messages'
+import {CREATE_ORDER} from './order_messages'
 import {toData} from '../../conversion'
 
 const eventbus: Eventbus = Global.eventbus
 
-describe('CheckoutService:', () => {
+describe('CheckoutPolicyService:', () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  let checkoutService: CheckoutService
+  let checkoutService: CheckoutPolicyService
   let order: OrderData
 
   beforeEach(() => {
-    checkoutService = new CheckoutService()
+    checkoutService = new CheckoutPolicyService()
 
   })
   describe('when a shopping cart is checked out with zero items', () => {

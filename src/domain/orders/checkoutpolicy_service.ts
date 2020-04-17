@@ -7,7 +7,7 @@ import {
   Event,
   Eventbus
 } from '../../eventbus'
-import {CREATE_ORDER} from '../orders/order_messages'
+import {CREATE_ORDER} from './order_messages'
 
 
 type ItemEntry = Map<string, { count: number, price: string }>
@@ -29,7 +29,7 @@ const countItem = (m: ItemEntry, item: ShoppingCartItemData): ItemEntry => {
 
 const countItems = (items: ShoppingCartItemData[]): ItemEntry => items.reduce(countItem, new Map())
 
-export class CheckoutService extends Service {
+export class CheckoutPolicyService extends Service {
   public constructor(eventbus: Eventbus = Global.eventbus) {
     super(eventbus)
     this._eventbus.subscribe(SHOPPING_CART_CHECKED_OUT, this.receiveEvent.bind(this))

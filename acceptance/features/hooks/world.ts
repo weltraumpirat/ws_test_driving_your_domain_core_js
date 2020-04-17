@@ -2,7 +2,7 @@ import {setWorldConstructor} from 'cucumber'
 import {ShoppingCartsApi} from '../../../src/api/shoppingcarts_api'
 import {ProductsApi} from '../../../src/api/products_api'
 import {UUID} from '../../../src/types'
-import {CheckoutService} from '../../../src/domain/checkout/checkoutservice'
+import {CheckoutPolicyService} from '../../../src/domain/orders/checkoutpolicy_service'
 import {ShoppingCartRepositoryInMemory} from '../../../src/persistence/shoppingcart_repository'
 import {ShoppingCartRepository} from '../../../src/domain/shoppingcarts/shoppingcart'
 import {ShoppingCartFixture} from '../../../src/domain/shoppingcarts/shoppingcart_fixture'
@@ -31,7 +31,7 @@ class World {
   public shoppingCartItemsReadModel: ShoppingCartItemsReadModel
   private shoppingCartItemCountReadModel: ShoppingCartItemCountReadModel
   private shoppingCartEmptyReadModel: ShoppingCartEmptyReadModel
-  public checkoutService: CheckoutService
+  public checkoutService: CheckoutPolicyService
   private orderFixture: OrderFixture
   public ordersApi: OrdersApi
   public ordersReadModel: OrdersReadModel
@@ -50,7 +50,7 @@ class World {
     this.orderFixture = new OrderFixture(new OrderRepositoryInMemory())
     this.ordersApi = new OrdersApi(this.ordersReadModel)
 
-    this.checkoutService = new CheckoutService()
+    this.checkoutService = new CheckoutPolicyService()
 
     this.shoppingCartRepository = new ShoppingCartRepositoryInMemory()
     this.productsReadModel = new ProductsReadModel()
