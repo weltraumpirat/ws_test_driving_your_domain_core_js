@@ -10,24 +10,24 @@ import {
 import {CREATE_ORDER} from './order_messages'
 
 
-type ItemEntry = Map<string, { count: number, price: string }>
+type ItemCountMap = Map<string, { count: number, price: string }>
 
-const addItemEntry = (m: ItemEntry, item: ShoppingCartItemData): ItemEntry => {
-  m.set(item.label || item.name, {count: 1, price: item.price})
-  return m
+const addItemEntry = (map: ItemCountMap, item: ShoppingCartItemData): ItemCountMap => {
+  map.set(item.label || item.name, {count: 1, price: item.price})
+  return map
 }
 
-const increaseItemCount = (m: ItemEntry, item: ShoppingCartItemData): ItemEntry => {
-  const value = m.get(item.label || item.name)
+const increaseItemCount = (map: ItemCountMap, item: ShoppingCartItemData): ItemCountMap => {
+  const value = map.get(item.label || item.name)
   if (value && value.count) value.count++
-  return m
+  return map
 }
 
-const countItem = (m: ItemEntry, item: ShoppingCartItemData): ItemEntry => {
-  return m.has(item.label || item.name) ? increaseItemCount(m, item) : addItemEntry(m, item)
+const countItem = (map: ItemCountMap, item: ShoppingCartItemData): ItemCountMap => {
+  return map.has(item.label || item.name) ? increaseItemCount(map, item) : addItemEntry(map, item)
 }
 
-const countItems = (items: ShoppingCartItemData[]): ItemEntry => items.reduce(countItem, new Map())
+const countItems = (items: ShoppingCartItemData[]): ItemCountMap => items.reduce(countItem, new Map())
 
 export class CheckoutPolicyService extends Service {
   public constructor(eventbus: Eventbus = Global.eventbus) {
