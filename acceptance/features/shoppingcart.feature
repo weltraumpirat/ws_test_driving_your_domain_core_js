@@ -9,9 +9,9 @@ Feature: A Shopping Cart Example
       | 4  | Whole Wheat Bread | Loaf          | 500g   | 1.59 EUR |
       | 5  | Organic Bread     | Loaf          | 500g   | 2.19 EUR |
       | 6  | Butter            | Pack          | 250g   | 1.69 EUR |
-      | 7  | Organic  Butter   | Pack          | 250g   | 2.39 EUR |
+      | 7  | Organic Butter    | Pack          | 250g   | 2.39 EUR |
 
-  Scenario: Empty cart
+  Scenario: Empty
     Given the empty shopping cart
     Then the shopping cart is empty
 
